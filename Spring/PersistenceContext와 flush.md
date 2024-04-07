@@ -8,7 +8,7 @@
 ![image](https://github.com/lielocks/WIL/assets/107406265/ea6f3379-8a89-4925-95ca-8fdc0a05ab69)
 
 
-### PersistContext 영속성 컨텍스트 ###
+### PersistenceContext 영속성 컨텍스트 ###
 + 영속성 컨텍스트는 JPA를 이해하는데 가장 중요한 용어이다.
   + "엔티티를 영구 저장하는 환경"이라는 뜻
   + EntityManager.persist(entity);
