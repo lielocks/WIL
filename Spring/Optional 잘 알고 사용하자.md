@@ -8,7 +8,7 @@ Optional is intended to provide a limited mechanism for library method return ty
 
 ### [ 올바른 Optional 사용법 가이드 ]
 
-✔ Optional 변수에 Null을 할당하지 말아라값이 없을 때 Optional.orElseX()로 기본 값을 반환하라
+✔ **Optional 변수에 Null을 할당하지 말아라값이 없을 때 Optional.orElseX()로 기본 값을 반환하라**
 
 Optional 변수에 Null을 할당하지 말아라
 
@@ -26,7 +26,7 @@ public Optional<Cart> fetchCart() {
 ```
 
 
-✔ 값이 없을 때 Optional.orElseX()로 기본 값을 반환하라
+✔ **값이 없을 때 Optional.orElseX()로 기본 값을 반환하라**
 
 Optional의 장점 중 하나는 함수형 인터페이스를 통해 가독성좋고 유연한 코드를 작성할 수 있다는 것이다. 
 
@@ -72,7 +72,7 @@ orElseGet은 값이 준비되어 있지 않은 경우, orElse는 값이 준비�
 
 
 
-✔ 단순히 값을 얻으려는 목적으로만 Optional을 사용하지 마라
+✔ **단순히 값을 얻으려는 목적으로만 Optional을 사용하지 마라**
 
 단순히 값을 얻으려고 Optional을 사용하는 것은 Optional을 남용하는 대표적인 경우이다. 
 
@@ -98,7 +98,7 @@ public String findUserName(long id) {
 ```
 
 
-✔ 생성자, 수정자, 메소드 파라미터 등으로 Optional을 넘기지 마라
+✔ **생성자, 수정자, 메소드 파라미터 등으로 Optional을 넘기지 마라**
 
 Optional을 파라미터로 넘기는 것은 상당히 의미없는 행동이다. 
 
@@ -197,7 +197,7 @@ public Map<String, String> getUserNameMap() {
 }
 ```
 
-✔ 반환 타입으로만 사용하라
+✔ **반환 타입으로만 사용하라**
 
 Optional은 반환 타입으로써 에러가 발생할 수 있는 경우에 결과 없음을 명확히 드러내기 위해 만들어졌으며, 
 
