@@ -95,37 +95,55 @@ public synchronized void start() {
 
  
 
-*1. 쓰레드가 실행 가능한지 검사함*
+**1. 쓰레드가 실행 가능한지 검사함**
+
+
 
 쓰레드는 New, Runnable, Waiting, Timed Waiting, Terminated 총 5가지 상태가 있다. start 가장 처음에는 해당 쓰레드가 실행 가능한 상태인지(0인지) 확인한다. 
 그리고 만약 쓰레드가 New(0) 상태가 아니라면 IllegalThreadStateException 예외를 발생시킨다.
 
+
+
 ![image](https://github.com/lielocks/WIL/assets/107406265/2268e31f-1742-41c9-8e15-4260b88f06f9)
 
 
-*2. 쓰레드를 쓰레드 그룹에 추가함*
+**2. 쓰레드를 쓰레드 그룹에 추가함**
+
+
+
 그 다음 쓰레드 그룹에 해당 쓰레드를 추가시킨다. 
 
-여기서 쓰레드 그룹이란 서로 관련있는 쓰레드를 하나의 그룹으로 묶어 다루기 위한 장치인데, 자바에서는 ThreadGroup 클래스를 제공한다. 
+
+
+여기서 쓰레드 그룹이란 서로 관련있는 쓰레드를 하나의 그룹으로 묶어 다루기 위한 장치인데, 자바에서는 `ThreadGroup` 클래스를 제공한다. 
 
 쓰레드 그룹에 해당 쓰레드를 추가하면 쓰레드 그룹에 실행 준비된 쓰레드가 있음을  알려주고, 관련 작업들이 내부적으로 진행된다.
  
  
  
-*3. 쓰레드를 JVM이 실행시킴*
+**3. 쓰레드를 JVM이 실행시킴**
+
+
 그리고 start0 메소드를 호출하는데, 이것은 native 메소드로 선언되어 있다. 
 
 이것은 **JVM**에 의해 호출되는데, 이것이 내부적으로 run을 호출하는 것이다. 
 
 그리고 쓰레드의 상태 역시 **Runnable**로 바뀌게 된다. 그래서 start는 여러 번 호출하는 것이 불가능하고 1번만 가능하다.
 
+
+
 ```java
 private native void start0();
 ```
 
+
+
 만약 다음과 같이 run을 직접 호출하면 새롭게 쓰레드가 만들어지지 않고, 메인 쓰레드에 의해 해당 메소드가 실행됨을 확인할 수 있다. 
 
 또한 여러 번 실행해도 아무런 문제가 없다. 그리고 출력 결과를 보면 main 메소드에 의해 실행됨을 실제로 확인할 수 있다.
+
+
+
 
 ```java
 @Test
@@ -147,9 +165,13 @@ void threadRun() {
 
 
 
+
+
 #### [ Runnable 인터페이스 ] ####
 
 Runnbale 인터페이스는 1개의 메소드 만을 갖는 함수형 인터페이스이다. 그렇기 때문에 람다로도 사용 가능하다.
+
+
 
 ```java
 @FunctionalInterface
@@ -167,6 +189,9 @@ public interface Runnable {
 
 앞서 살펴본 Thread 클래스는 반드시 run 메소드를 구현해야 했는데, Thread 클래스가 Runnable를 구현하고 있기 때문이다.
 
+
+
+
 ```java
 public class Thread implements Runnable {
     ...
@@ -176,6 +201,11 @@ public class Thread implements Runnable {
  
 기존에 Thread로 작성되었던 코드를 Runnable로 변경하면 다음과 같다. 
 마찬가지로 별도의 쓰레드에서 실행됨을 확인할 수 있다.
+
+
+
+
+
 
 ```java
 @Test
@@ -197,6 +227,12 @@ void runnable() {
 // Thread: Thread-1
 ```
  
+
+
+
+
+
+
 
 
 ## Thread 와 Runnable의 비교 ##
