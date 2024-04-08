@@ -112,7 +112,15 @@ public synchronized void start() {
 
 
 
-쓰레드는 New, Runnable, Waiting, Timed Waiting, Terminated 총 5가지 상태가 있다. start 가장 처음에는 해당 쓰레드가 실행 가능한 상태인지(0인지) 확인한다. 
+쓰레드는 New, Runnable, Waiting, Timed Waiting, Terminated 총 5가지 상태가 있다. 
+
+
+
+start 가장 처음에는 해당 쓰레드가 실행 가능한 상태인지(0인지) 확인한다. 
+
+
+
+
 그리고 만약 쓰레드가 New(0) 상태가 아니라면 IllegalThreadStateException 예외를 발생시킨다.
 
 
