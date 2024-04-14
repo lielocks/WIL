@@ -256,4 +256,77 @@ List<String> list = new ArrayList<>(100);
   (내부적으로 native method인 System.arrayCopy(...)를 사용하기 때문에)
 
 + add() or get() operation : Array나 ArrayList로 부터 요소를 얻거나 추가할 때는 거의 비슷한 성능을 보인다.
-  
+
+
+### 3. Primitives
+
++ Array : primitive type, Object
+
++ ArrayList : ArrayList 는 primitive data types (**`Primitive data types represent single values, and they are not objects. int, float, double, char, boolean etc..`**) 을 가질 수 없다. **오직 Object 만** 가질 수 있다.
+
++ 사람들은 ArrayList 가 primitive type 을 저장할 수 있다는 오해를 하는데 X !!!
+
+```java
+ArrayList<int> arrList //primitive data types X
+ArrayList<Integer> arrList //wrapper Class O
+```
+
+```java
+ArrayList arrayListToObject = new ArrayList();
+arrayListToObject.add(23); // try to add 23 (primitive)
+```
+
++ JVM 은 Autoboxing (내부적으로 primitive type 을 타입에 상응하는 Object 로 변환해주는 것 int -> Integer) 을 통해 ArrayList에 Object 만 저장되도록 한다.
+  따라서, 위의 코드는 내부적으로 아래와 같이 수행된다.
+
+```java
+arrayListToObject.add(new Integer(23));
+```
+
+</br>
+
+### 4. Iterating the values
+
++ Array : for loop 아니면 for each loop 를 통해 array를 순회할 수 있다.
+
++ ArrayList : iterator 를 사용해 ArrayList를 순회할 수 있다.
+
+</br>
+
+### 5. Type - Safety
+
++ Array : Array 는 동종 data structure 이다. 따라서 Array 는 특정 데이터 타입의 primitives 나 특정 클래스의 objects 만을 저장할 수 있다. 만약 명시된 타입이 아닌 다른 데이터 유형을 Array 에 저장할 경우 ArrayStoreException 이 발생한다.
+
+```java
+String temp[] = new String[2]; // creates a String array of size 2
+```
+
+```java
+temp[0]  = new Integer(12); // throws ArrayStoreException
+```
+</br>
+
+### 6. Length 
+
++ Array : Array의 길이를 반환하는 length 변수
+
+```java
+int arrayObject[] = new int[3];
+int arrayLength = arrayObject.length;
+```
+
++ ArrayList : size() 메소드
+
+```java
+int len = arrayList.size();    // uses arrayListObject size method
+```
+</br>
+
+### 7. Adding elements
++ Array : Assign operator(=)를 사용하여 요소를 추가한다.
++ ArrayList : add() 메소드를 사용하여 요소를 추가한다.
+
+</br>
+
+![image](https://github.com/lielocks/WIL/assets/107406265/d3218219-ab38-42a4-9358-d1bc678598ae)
+
