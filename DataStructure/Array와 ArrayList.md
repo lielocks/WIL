@@ -292,6 +292,14 @@ arrayListToObject.add(new Integer(23));
 
 + ArrayList : iterator 를 사용해 ArrayList를 순회할 수 있다.
 
+  ```
+  java.lang.Object
+	- java.util.AbstractCollection<E>
+    	- java.util.AbstractList<E>
+        	- java.util.ArrayList<E>
+  // Iterator는 Collection 인터페이스의 일부 메서드인 iterator()를 통해서만 얻을 수 있기 때문에 ArrayList만 iterator 사용 가능
+  ```
+
 </br>
 
 ### 5. Type - Safety
