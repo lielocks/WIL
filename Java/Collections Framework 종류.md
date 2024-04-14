@@ -80,7 +80,7 @@ Map 인터페이스 컬렉션들은 `두개의 데이터를 묶어 한쌍으로 
 
 </br>
 
-### Collection 인처페이스 
+### Collection 인터페이스 
 ![image](https://github.com/lielocks/WIL/assets/107406265/69134800-e7a2-4b6d-a7bc-55b7434403b1)
 
 + List, Set, Queue 에 상속을 하는 **실질적인 최상위 컬렉션 타입**
