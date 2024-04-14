@@ -32,8 +32,11 @@ java 만의 collection framework의 장점들 !
 > Tip
 >
 > 컬렉션 프레임워크에 저장할 수 있는 데이터는 오로지 **객체(Object)** 뿐이다.
+>
 > 즉, int형이나 double형 같은 자바의 primitive data type 은 적재를 못한다는 말이다.
+>
 > 따라서 primitive 타입을 wrapper 타입으로 변환하여 Integer 객체나 Double 객체로 박싱(Boxing)하여 저장하여야 한다.
+>
 > 또한 객체를 담는 다는 것은 곧 **`주소값을 담는다는 것`** 이니, *null도 저장이 가능* 하다
 >
 
