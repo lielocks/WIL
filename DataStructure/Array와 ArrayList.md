@@ -163,3 +163,97 @@ public class ArrayListExample {
 }
 ```
 
+
+### Array 와 ArrayList의 공통점
+
+1. add and get method
+
+Array와 ArrayList는 요소를 추가하거나 가져올 때의 성능은 비슷하다. 두 작업 모두 일정한 시간에 실행된다.
+
+2. Duplicate elements
+
+둘 다 중복되는 요소를 저장할 수 있다.
+
+3. Null Values
+
+Null 값을 저장할 수 있고 index를 사용하여 값을 참조할 수 있다.
+
+4. 순서
+
+순서가 지정되지 않음.
+
+</br>
+
+
+### Array 와 ArrayList의 차이점
+
+가장 큰 차이점은 `길이를 조정`할 수 있는가? 없는가? 이다.
+
+Java의 Array는 `고정 길이` 이다. 
+따라서, 정해진 길이의 배열을 모두 채우면, 새로운 데이터를 추가하고 싶을 경우 새로운 배열을 만들어주어야 한다.
+
+Java의 ArrayList는 `가변 길이` 이다. 하지만 내부적으론 배열로 구성되어 있다. 
+ArrayList는 Default로 10개의 공간을 가진 배열로 시작. 
+하지만 최적화(지연 초기화)로 인해 막 생성하면 0개의 사이즈로 시작된다. 
+다만, 편리함의 대가로 Array보다 살짝 느리니 Array로 충분히 처리 가능하다거나 코딩 테스트나 알고리즘을 풀 때에는 Array를 활용해주는 것이 좋을 것 같다.
+
+### 1. Resizable
++ Array : Array는 static하다(길이 고정). Array 객체를 생성한 후에는 Array의 길이를 마음대로 변경할 수 없다.
+  
++ ArrayList : ArrayList는 사이즈가 dynamic 동적이다.
+  각각의 ArrayList Object는 ArrayList의 size를 나타내는 `capacity 인스턴스 변수`를 가지고 있다.   ArrayList에 요소들이 더해지면 ArrayList의 capacity 또한 자동적으로 늘어난다.
+  만약 설정한 capacity를 넘어서 더 많은 객체가 들어오면, 배열 크기를 **1.5배** 증가시킨다.
+
+
+  ```java
+  /**
+ * Increases the capacity to ensure that it can hold at least the
+ * number of elements specified by the minimum capacity argument.
+ *
+ * @param minCapacity the desired minimum capacity
+ */
+private void grow(int minCapacity) {
+    // overflow-conscious code
+    int oldCapacity = elementData.length;
+    int newCapacity = oldCapacity + (oldCapacity >> 1); //기존 용량 + 기존 용량 /2 (우측 shift 연산)
+    if (newCapacity - minCapacity < 0)
+        newCapacity = minCapacity;
+    if (newCapacity - MAX_ARRAY_SIZE > 0)
+        newCapacity = hugeCapacity(minCapacity);
+    // minCapacity is usually close to size, so this is a win:
+    elementData = Arrays.copyOf(elementData, newCapacity);
+}
+   ```
+
+
+다시 한번 정리하자면, element를 add하려고 할때, capacity가 배열의 길이와 같아지면 일반적으로 **기존의 용량 + 기존 용량/2** 만큼 크기가 늘어난 배열에 기존의 배열을 copy해준다.
+
+
++ **Q. ArrayList는 저장용량을 지정해주지 않지 않나요?** Default 저장용량은 10이다.
+![image](https://github.com/lielocks/WIL/assets/107406265/87510107-5a62-4117-adac-2b3eee55a581)
+
+
+```java
+// DEFAULT_CAPACITY=10
+// 기본 저장용량 10으로 리스트 생성
+List<String> list = new ArrayList<>(); 
+
+// 저장 용량을 100으로 설정해 ArrayList 생성 
+List<String> list = new ArrayList<>(100);
+```
+
+</br>
+
+### 2. Performance
+
++ Array와 ArrayList의 성능은 수행되는 작업에 따라 달라진다.
+
++ resize() operation : `ArrayList의 자동 크기 조정`은 임시 배열을 사용하여 이전 배열의 요소를 새 배열로 복사하기 때문에 *성능이 저하*된다.
+
++ ArrayList의 자동 resize는 성능을 낮출 것이다
+  (old array에서 new array로 요소들을 옮길 때 임시 array를 사용하기 때문에)
+  ArrayList는 resizing하는 동안 내부적으로 Array의 지원을 받는다.
+  (내부적으로 native method인 System.arrayCopy(...)를 사용하기 때문에)
+
++ add() or get() operation : Array나 ArrayList로 부터 요소를 얻거나 추가할 때는 거의 비슷한 성능을 보인다.
+  
