@@ -205,7 +205,7 @@ ArrayList는 Default로 10개의 공간을 가진 배열로 시작.
   만약 설정한 capacity를 넘어서 더 많은 객체가 들어오면, 배열 크기를 **1.5배** 증가시킨다.
 
 
-  ```java
+```java
   /**
  * Increases the capacity to ensure that it can hold at least the
  * number of elements specified by the minimum capacity argument.
@@ -223,7 +223,7 @@ private void grow(int minCapacity) {
     // minCapacity is usually close to size, so this is a win:
     elementData = Arrays.copyOf(elementData, newCapacity);
 }
-   ```
+```
 
 
 다시 한번 정리하자면, element를 add하려고 할때, capacity가 배열의 길이와 같아지면 일반적으로 **기존의 용량 + 기존 용량/2** 만큼 크기가 늘어난 배열에 기존의 배열을 copy해준다.
