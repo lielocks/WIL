@@ -179,17 +179,17 @@ public static long access(List list) {
 
 </br>
 
-1. [순차 추가] 가 Linkedlist가 우위인 이유는 ArrayList는 공간 부족으로 인한 배열 복사가 일어나기 때문이다.
+1. **[순차 추가]** 가 Linkedlist가 우위인 이유는 **`ArrayList는 공간 부족으로 인한 배열 복사`** 가 일어나기 때문이다.
 
-2. [중간 추가] 가 LinkedList가 우위인 이유는 ArrayList는 배열 복사 및 데이터 이동 (shift) 가 발생하기 때문이다.
+2. **[중간 추가]** 가 LinkedList가 우위인 이유는 **`ArrayList는 배열 복사 및 데이터 이동 (shift) 가 발생`** 하기 때문이다.
 
-3. [접근 시간] 이 ArrayList가 우위인 이유는 메모리 저장 구조상 배열은 연속된 공간에 저장되고 index로 단번에 access 하기 때문이다.
+3. **[접근 시간]** 이 ArrayList가 우위인 이유는 메모리 저장 구조상 **`배열은 연속된 공간에 저장되고 index로 단번에 access`** 하기 때문이다.
 
-4. [중간 삭제] 가 LinkedList가 우위인 이유는 요소 이동 없이 그저 node의 pointing만 교체만 하면 되기 때문이다.
+4. **[중간 삭제]** 가 LinkedList가 우위인 이유는 **`요소 이동 없이 그저 node의 pointing만 교체`** 하면 되기 때문이다.
 
-5. [순차 삭제] 가 ArrayList가 우위인 이유는 아무래도 node 의 link를 끊고 하는 작업 보단 배열에서 요소를 삭제하는게 더 빠르기 때문이다.
+5. **[순차 삭제]** 가 ArrayList가 우위인 이유는 아무래도 node 의 link를 끊고 하는 작업 보단 **`배열에서 요소를 삭제하는게 더 빠르기 때문`** 이다.
 
-6. </br>
+</br>
 
 ### LinkedList는 의외로 잘 사용되지 않는다
 
