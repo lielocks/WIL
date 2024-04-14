@@ -12,6 +12,8 @@
 수십년에 걸쳐 JVM에 최적화시켜 개량해왔기 때문에,
 만일 java 프로그래밍에서 자료 구조를 사용할 일이 있다면 Collection Framework를 가져와 사용하면 된다.
 
+</br>
+
 ### 컬렉션 프레임워크 장점
 
 java 만의 collection framework의 장점들 !
