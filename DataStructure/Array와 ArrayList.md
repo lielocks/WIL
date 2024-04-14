@@ -166,19 +166,19 @@ public class ArrayListExample {
 
 ### Array 와 ArrayList의 공통점
 
-1. add and get method
+**1. add() and get() method**
 
 Array와 ArrayList는 요소를 추가하거나 가져올 때의 성능은 비슷하다. 두 작업 모두 일정한 시간에 실행된다.
 
-2. Duplicate elements
+**2. Duplicate elements**
 
 둘 다 중복되는 요소를 저장할 수 있다.
 
-3. Null Values
+**3. Null Values**
 
 Null 값을 저장할 수 있고 index를 사용하여 값을 참조할 수 있다.
 
-4. 순서
+**4. 순서**
 
 순서가 지정되지 않음.
 
@@ -257,6 +257,7 @@ List<String> list = new ArrayList<>(100);
 
 + add() or get() operation : Array나 ArrayList로 부터 요소를 얻거나 추가할 때는 거의 비슷한 성능을 보인다.
 
+</br>
 
 ### 3. Primitives
 
@@ -287,7 +288,7 @@ arrayListToObject.add(new Integer(23));
 
 ### 4. Iterating the values
 
-+ Array : for loop 아니면 for each loop 를 통해 array를 순회할 수 있다.
++ Array : for loop / for each loop 를 통해 array를 순회할 수 있다.
 
 + ArrayList : iterator 를 사용해 ArrayList를 순회할 수 있다.
 
