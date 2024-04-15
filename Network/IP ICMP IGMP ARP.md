@@ -334,10 +334,15 @@ ARP Request Packet이 전달되기만 한다면 LAN이라고 보는 것이죠.
 
 ### MAC 주소란 ?
 MAC 주소란 말을 자주 들어보셨을거라 생각합니다. 
+
 IP Address와 늘 함께 언급되는 주소이지요. 
+
 데이터 링크 계층에서 통신을 위한 네트워크 인터페이스에 할당된 고유 식별자로 `Network Interface Card(NIC)` 를 가진 단말이라면 공장에서 출고될 때 부여되고 평생 사용하는 고유한 주소를 의미합니다. 
+
 즉 LAN(Local Address Network) 에서 목적지와 통신하기 위한 실질적인 주소가 바로 **MAC 주소** 입니다.
+
 ![image](https://github.com/lielocks/WIL/assets/107406265/bc0e353c-e967-42e5-8275-6bff7a66a60b)
+
 <br>
 
 네트워크 장비 혹은 컴퓨터는 모두 MAC 주소를 갖습니다. 
