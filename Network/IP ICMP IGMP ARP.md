@@ -453,4 +453,127 @@ ARP는 이더넷 통신에 없어서는 안 될 매우 중요한 요소이며 �
 
 <br>
 
+## ICMP (Internet Control Message Protocol) 이란?
 
+ ICMP는 인터넷 제어 메시지 프로토콜이다.
+
+ 오류 메세지를 전송받는데 주로 쓰인다.
+
+> 위키 정의
+>
+> ICMP 메세지들은 일반적으로 IP 동작에서 진단이나 제어로 사용되거나 오류에 대한 응답으로 만들어진다.
+>
+> ICMP 오류들은 원래 패킷의 소스 IP 주소로 보내지게 된다.
+>
+
+<br>
+
+### ICMP 의 용도는?
+
++ 인터넷 / 통신 상에서 발생한 일반적인 상황에 대한 보고 (report)
+
++ 인터넷 / 통신 상에서 발생한 오류에 대한 보고
+
++ 위험한 상황에 대한 경보
+
+<br>
+
+### ICMP 의 기능은?
+
++ IP 프로토콜을 이용하여 ICMP 메세지 전달
+
++ 네트워크 계층에 속하여 네트워크 관리 프로토콜의 역할 수행
+  + 여기서 포인트는 종단간 데이터 수송 역할 X
+ 
+<br>
+
+![image](https://github.com/lielocks/WIL/assets/107406265/c1bfb3e7-85c4-4b3f-9cc1-5624b1b83ee1)
+
+TCP/IP 계층에서의 ICMP가 어디에 속하는 지를 나타내는 그림입니다. 
+
+기억해야 할 것은 ?!
+
+**-> ICMP 프로토콜은 Network 계층에 속하며 IP 프로토콜과 같이 사용한다 !**
+
+<br>
+
+### ICMP 사용 명령어
+1. Ping 명령어 : 상대방 호스트의 작동 여부 및 응답시간 측정하는데 사용
+   + Echo Request : ICMP 질의메세지 요청
+   + Echo Reply : ICMP 응답메세지 요청
+
+
+2. Tracert 명령어 : 목적지까지의 라이팅 경로 추적을 하기 위해 사용
+   + Time Exceeded 확인 가능
+  
+<br>
+
+### ICMP 패킷 헤더 구조 
+
+![image](https://github.com/lielocks/WIL/assets/107406265/54acc325-2dcf-4278-b7a0-70565b338a24)
+
+<br>
+
+ICMP 헤더는 그림에선 5개로 보이지만 기본적으로 4개로 구성되어 있다.
+
++ ICMP Type : ICMP 의 메세지를 구별
+
++ ICMP Code : 메세지 내용에 다한 추가 정보 (즉, ICMP TYPE 에 대한 상세 정보)
+
++ ICMP Checksum : ICMP 의 값이 변조 여부를 확인
+
++ ICMP 메세지1, 메세지2 : ICMP TYPE 에 따라 내용이 가변적으로 들어가는 내용
+
+   + 메세지 1
+     + ICMP TYPE 3 (DESTINATION UNREACHABLE)
+     + ICMP TYPE 11 (TIME EXCEEDED) 등에서는 사용되지 않으므로 0이 채워짐
+    
+
+   + 메세지 2
+     + ICMP TYPE 8 (ECHO REQUEST)
+     + ICMP TYPE 0 (ECHO REPLY) 같은 메세지에서 특정 값이 주어짐
+    
+
+내용을 읽어본다면 결국 ICMP는 TYPE에 따라 종류가 다양합니다. 
+
+그 중 많이 볼 수 있는 메세지 들을 아래 표에 정리해 봤어요.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/73beefdc-6cc6-4547-8465-732c4197e81b)
+
+<br>
+
+### Wireshark 를 통해 본 ICMP
+
+이번엔 실제 덤프를 통해서 패킷을 살펴볼게요.
+
+**ICMP TYPE - REQUEST**
+
+ICMP 구조에 따라 Type 8, Code 0, Checksum, Data 를 확인할 수 있네요
+
+type 이 Request 이기 때문에 메세지 1(data) 에 특정값 (abcdefg .. 이하 생략) 이 채워져 있네요
+
+![image](https://github.com/lielocks/WIL/assets/107406265/6035359d-be2e-4936-95e1-cd4c19500504)
+
+<br>
+
+**ICMP TYPE - Reply  [응답이 정상적인 경우]**
+Type 0, Code 0, Checksum 도 정상적이네요
+
+또 동일하게  Reply 이기 때문에 메세지 1(data)에 특정값으로 채워져 있는 것을 확인할 수 있습니다
+
+
+![image](https://github.com/lielocks/WIL/assets/107406265/2c4dec14-8cef-4971-9b9e-ef215d86416d)
+
+<br>
+
+
+**ICMP TYPE - Destination Unreachable [응답이 비정상적인경우]**
+
+어떠한 이유로 인해 패킷이 정상적으로 도달하지 못하는 경우 이에 대한 응답메세지를 보내는데, Unreachable도 그 중 하나입니다.
+
+Type 3, Code 13, Checksum 도 정상적인데, 차이점은 메세지 2(data)에 실패한 패킷의 정보(IPV4, ICMP)가 담겨있는 것을 볼 수 있죠
+
+
+![image](https://github.com/lielocks/WIL/assets/107406265/9b116b07-9746-4aa4-a5c6-6a6ec73b0e2b)
+
+<br>
