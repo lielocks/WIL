@@ -1,4 +1,4 @@
-# TCP / IP 프로토콜 게층 ~ 네트워크 계층에서 주로 쓰이는 프로토콜 알아보자 !
+# TCP / IP 프로토콜 계층 ~ 네트워크 계층에서 주로 쓰이는 프로토콜 알아보자 !
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/0e089b0e-b133-4fed-913b-37f18e0544bd)
 
