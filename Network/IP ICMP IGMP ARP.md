@@ -275,7 +275,7 @@ IP 헤더 및 데이터를 포함한 ( IP 패킷 전체의 길이를 바이트 �
 
 <br>
 
-## ARP 란? (Address Reolution Protocol)
+## ARP (Address Reolution Protocol) MAC 주소와 IP 주소의 연결고리
 
 ARP (Address Resolution Protocol - 주소 결정 프로토콜)
 
@@ -447,9 +447,43 @@ IP 주소와 MAC 주소가 구비되어있다 하더라도 다른 PC의 IP 주�
 ![image](https://github.com/lielocks/WIL/assets/107406265/b86d59d4-705e-4794-baa8-d9c10c0e937d)
 
 
-여기까지가 ARP입니다. 
+이렇게 ARP 프로토콜을 이용하여 각 장비들은 서로의 MAC주소와 IP주소를 매칭시키는 작업을 하고 이를 ARP테이블에 기록해 둡니다.
 
-ARP는 이더넷 통신에 없어서는 안 될 매우 중요한 요소이며 네트워크 트러블 슈팅의 기본으로 잘 알고 있어야 합니다. 
+![image](https://github.com/lielocks/WIL/assets/107406265/d704450d-2753-4d7b-b943-879fe0be8c79)
+
+
+<br>
+
+
+### ARP 패킷의 구조
+![image](https://github.com/lielocks/WIL/assets/107406265/6d857b7f-6ef1-4bd6-ba8c-6f68ffb3840e)
+
+
+ARP 패킷의 구조입니다. 여러가지 알 수 없는 항목들이 많은데 우리는 이중에서 몇가지에만 집중할 것입니다.
+
+ARP패킷의 목적은 내가 알고 있는 IP주소의 MAC주소를 찾는 것이라는 것을 꼭 기억해야 합니다. 각 항목들의 의미는 아래와 같습니다.
+
+ 
+
+**1. 출발지 MAC 주소, 목적지 MAC 주소**
+
+송신지 MAC주소는 AA(생략)인데 이거 모든 애들한테 전달해줘!
+
+여기서 모든 애들한테 전달해줘라고 했기 때문에 목적지 MAC 주소에는 브로드캐스트 주소인 FF:FF:FF:FF:FF:FF로 채워지게 됩니다.
+
+
+**2. 송신지 MAC 주소, 송신지 IP 주소**
+
+야!! 나 MAC주소는 AA이고 IP주소는 1.1.1.1인데!!
+
+
+**3. 수신지 MAC 주소, 수신지 IP 주소**
+
+너 1.1.1.2 맞지?? 너 MAC 주소가 뭐지??
+
+ 
+
+다른 항목들에 대해서는 우리가 다 외울 수 없을 뿐더러 정확히 위의 항목 3가지에 대해서 ARP가 저러한 의미를 담고 있구나라고 생각하시면 됩니다.
 
 <br>
 
