@@ -443,7 +443,10 @@ IP 주소와 MAC 주소가 구비되어있다 하더라도 다른 PC의 IP 주�
 여기서 짚고 넘어가야 할 점은 PC 0, 1,2,3뿐만 아니라 모든 단말들은 자신만의 Routing Table이 있어 자신이 보내려는 패킷의 목적지 IP가 자신이 소속된 IP 대역인지 아닌지 알 수 있다는 것입니다.
 
 <br>
-![image](https://github.com/lielocks/WIL/assets/107406265/8caee3fc-0cda-489a-8687-f2197f63778d)
+
+![image](https://github.com/lielocks/WIL/assets/107406265/b86d59d4-705e-4794-baa8-d9c10c0e937d)
+
+
 여기까지가 ARP입니다. 
 
 ARP는 이더넷 통신에 없어서는 안 될 매우 중요한 요소이며 네트워크 트러블 슈팅의 기본으로 잘 알고 있어야 합니다. 
