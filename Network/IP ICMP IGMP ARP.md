@@ -384,7 +384,9 @@ IP Address와 늘 함께 언급되는 주소이지요.
 `논리적 주소인 IP 주소`와 `물리적 주소인 MAC 주소`의 관계 또한 `행정적 주소`와 `물리적 주소`와 흐름이 같다고 볼 수 있습니다.
 
 <br>
-![image](https://github.com/lielocks/WIL/assets/107406265/c8087301-71d9-4835-a5cf-bf8e95b62e7d)
+
+![image](https://github.com/lielocks/WIL/assets/107406265/e855e8e3-a511-4c69-bedc-c60d0615066c)
+
 
 IP 주소는 끊임없이 변화합니다. 
 MAC 주소 체계가 없는 상황을 가정하고 IP 주소만 있는 상황에서 PC0 사용자가 자신의 IP를 192.168.1.2로 바꾼다면 PCO와 PC1 모두 192.168.1.2 IP를 갖게 될 것이고 원래 IP 192.168.1.2 주인이 누군지 알 길이 없게 됩니다. 
