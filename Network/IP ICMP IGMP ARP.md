@@ -35,7 +35,7 @@ IPv4 헤더는 고정 부분 20바이트와 가변 부분 0~40바이트로 구�
 
 </br>
 
-**<Header Length>**
+**Header Length**
 
 헤더 길이는 4바이트를 기본 단위로 헤더의 길이를 규정하는 영역이다.
 
@@ -45,7 +45,7 @@ IPv4 에서는 헤더 길이가 가변이므로 이를 규정하는 영역이 �
 </br>
 
 
-**<DS>**
+**DS**
 
 DS(Differentiated Service, 차등 서비스)는 IP 패킷 전송 시 우선순위와 혼잡 알림을 위한 8비트의 영역이다. 
 
@@ -56,7 +56,7 @@ DS 필드에는 서비스 품질 유형을 나타내는 DSCP(Differentiated Serv
 </br>
 
 
-**<Total Length 전체 길이>**
+**Total Length 전체 길이**
 
 전체 길이(Total Length)는 헤더와 데이터를 합한 IP 패킷 전체 길이를 바이트 단위로 나타낸다. 
 
@@ -66,7 +66,7 @@ DS 필드에는 서비스 품질 유형을 나타내는 DSCP(Differentiated Serv
 
 
 
-**< Flags >**
+**Flags**
 
 플래그(Flags)는 패킷의 분할 여부에 대한 정보를 나타내는 3비트의 영역이다. 
 
@@ -79,7 +79,7 @@ MF는 단편이 더 있는지 판단하는 역할을 하며, 0이면 마지막 �
 </br>
 
 
-**<Fragment Offset>**
+**Fragment Offset**
 
 단편 오프셋(Fragment Offset)은 분할된 패킷을 재조립할 수 있도록 원래 위치를 알려주는 영역으로, 
 
@@ -89,13 +89,13 @@ MF는 단편이 더 있는지 판단하는 역할을 하며, 0이면 마지막 �
 
 
 
-**<TOS ( Type Of Service )>**
+**TOS ( Type Of Service )**
 
 인터넷에 제공되는 QOS 기능을 위한 서비스 형식 필드 ( 요구되는 서비스 품질을 나타냄 )
 
 </br>
 
-**<Identification>**
+**Identification**
 
 식별자(Identification)는 IP 패킷을 식별하기 위해 사용된다. 
 
@@ -106,7 +106,7 @@ MF는 단편이 더 있는지 판단하는 역할을 하며, 0이면 마지막 �
 </br>
 
 
-**<TTL ( Time To Live )>**
+**TTL ( Time To Live )**
 
 IP 패킷 수명
 
@@ -118,13 +118,13 @@ TTL(Time to Live, 패킷 수명)은 이를 방지하는 옵션으로, 라우터�
 
 <br>
 
-**< IP Option >**
+**IP Option**
 
 부가적인 서비스 식별을 위한 필드
 
 </br>
 
-**<Protocol Identifier>**
+**Protocol Identifier**
 
 어느 상위계층 프로토콜이 데이터 내에 포함되었는가를 보여줌
 
@@ -132,14 +132,14 @@ TTL(Time to Live, 패킷 수명)은 이를 방지하는 옵션으로, 라우터�
 
 </br>
 
-**<Total Packet Length>**
+**Total Packet Length**
 
 IP 헤더 및 데이터를 포함한 ( IP 패킷 전체의 길이를 바이트 단위로 길이를 표시 최댓값 : 2의 16승 -1 )
 
 </br>
 
 
-**<Header Checksum>**
+**Header Checksum**
 
 헤더 체크섬은 네트워크를 통해 패킷이 전송될 때 발생한 오류를 검출하기 위해 사용되는 영역이다.
 
@@ -150,14 +150,14 @@ IP 헤더 및 데이터를 포함한 ( IP 패킷 전체의 길이를 바이트 �
 </br>
 
 
-**<Source Address 전송지 주소>**
+**Source Address 전송지 주소**
 
 전송지 주소(Source Address)는 패킷을 전송하는 호스트의 주소를 나타내는 영역이다.
 
 </br>
 
 
-**<Destination Address 수신지 주소>**
+**Destination Address 수신지 주소**
 
 수신지 주소(Destination Address)는 패킷을 수신하는 호스트의 주소를 나타내는 영역이다.
 
