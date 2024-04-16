@@ -487,7 +487,7 @@ ARP패킷의 목적은 내가 알고 있는 IP주소의 MAC주소를 찾는 것�
 
 <br>
 
-### RARP
+## RARP
 
 **Reverse Address Resolution Protocol**
 
