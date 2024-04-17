@@ -17,7 +17,7 @@
 
 <br>
 
-### Database 와 Storage 의 차이점
+## Database 와 Storage 의 차이점
 
 + **Database**
   
