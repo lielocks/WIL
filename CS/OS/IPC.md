@@ -55,7 +55,7 @@ PIPE는 매우 간단하게 사용할 수 있다는 장점이 있습니다. 
 
 ### 2. Named PIPE (FIFO)
 
-![image](https://github.com/lielocks/WIL/assets/107406265/64b3f98d-864d-4873-91a3-751c092424a9)
+![image](https://github.com/lielocks/WIL/assets/107406265/964e4f56-0c9b-4705-92b1-a5688ee42f04)
 
 
 익명 파이프(PIPE)는 **통신을 할 프로세스** 가 **`명확`** 하게 알 수 있는 경우 사용합니다. 
