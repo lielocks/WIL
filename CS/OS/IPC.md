@@ -91,12 +91,16 @@ Named PIPE와 다른 점이라면 **`Name PIPE가 데이터의 흐름`** 이라�
 **1. Direct Communication**
 
 통신하려는 프로세스의 이름을 명시적으로 표시하여 메세지를 직접 전달하는 방식
+
 ![image](https://github.com/lielocks/WIL/assets/107406265/284b67ad-a5a3-46f8-9e1c-ac2e64be5697)
+
 
 **2. Indirect Communication**
 
 mailbox (또는 port) 를 통해 메세지 간접 전달하는 방식
+
 ![image](https://github.com/lielocks/WIL/assets/107406265/4781b23b-223b-421a-91bb-ac25b9e2a61c)
+
 
 >
 > **장점**
