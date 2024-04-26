@@ -1,11 +1,13 @@
 # 1. JPA (Java Persistent API) 와 ORM (Object Relational Mapping)
 
-JPA 란 **자바 ORM 기술에 대한 API 표준 명세*** 를 의미합니다.
+JPA 란 **자바 ORM 기술에 대한 API 표준 명세** 를 의미합니다.
 
 JPA 는 **`ORM 을 사용하기 위한 인터페이스를 모아둔 것`** 이며, 
 JPA 를 사용하기 위해서는 JPA 를 구현한 `Hibernate, EclipseLink, DataNucleus` 같은 ORM 프레임워크를 사용해야 합니다.
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/54ae2545-a890-4343-b1a3-5867a79cfb43)
+
+<br>
 
 ### ORM
 
