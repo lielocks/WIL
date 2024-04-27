@@ -44,9 +44,15 @@ public class TestEntity {
 
 JPA 공식 문서에는 Entity Class의 요구사항에 대해 다음과 같은 내용이 포함되어 있다.
 
+<br>
+
 ![image](https://github.com/lielocks/WIL/assets/107406265/ce3beaae-9d17-4df3-93d6-77c0b75bca84)
 
+<br>
+
 > Entity Class 는 반드시 매개변수가 없는 public 또는 protected 의 생성자를 가져야 한다.
+
+<br>
 
 우리는 Entity Class 인스턴슬르 생성할 때 보통 매개변수가 없는 기본 생성자를 사용할 일이 거의 없다.
 
