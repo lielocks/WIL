@@ -184,7 +184,11 @@ Survivor 영역은 총 2개이지만 반드시 1개의 영역에만 데이터가
  
 이러한 진행 과정을 그림으로 살펴보면 다음과 같다.
 
+<br>
+
 ![image](https://github.com/lielocks/WIL/assets/107406265/0fb6cd26-be78-4ecf-9da9-b5dbc0bcb4aa)
+
+<br>
 
 HotSpot JVM에서는 **Eden 영역에 객체를 빠르게 할당(Allocation)** 하기 위해 **`bump the pointer`** 와 **`TLABs(Thread-Local Allocation Buffers)`** 라는 기술을 사용하고 있다. 
 
