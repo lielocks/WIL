@@ -50,9 +50,13 @@ Young , Old 총 2가지 영역으로 설계되었다.
 
 초기에는 Perm 영역이 존재하였지만 Java 8부터 제거되었다.
 
+<br>
+
 ![image](https://github.com/lielocks/WIL/assets/107406265/0de57bbc-402c-4eb6-abba-e2547ac96ed3)
 
 > GC 영역 및 흐름
+
+<br>
 
 + **Young 영역 Young Generation**
 
