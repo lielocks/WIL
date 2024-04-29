@@ -111,7 +111,7 @@
 
 1. **웹서버와의 통신** 지원
 
-   + 서블릿 컨테이너는 `서블릿과 웹서버`c가 손쉽게 통신할 수 있게 해줍니다.
+   + 서블릿 컨테이너는 `서블릿과 웹서버` 가 손쉽게 통신할 수 있게 해줍니다.
   
    + 일반적으로 우리는 socket 을 만들고 listen, accept 등을 해야하지만 `서블릿 컨테이너는 이러한 기능을 API 로 제공` 하여 복잡한 과정을 생략할 수 있게 해줍니다.
   
@@ -180,7 +180,9 @@
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/360f39a3-a314-4efd-8744-31c7d092eef8)
 
-**Servlet** 은 **`java source code 속에 HTML 코드가`** 들어가는 형태인데, **JSP** 는 이와 반대로 **`HTML 소스코드 속에 java source code 가 들어가는 구조`** 를 갖는 **web application programming 기술** 입니다. 
+**Servlet** 은 **`java source code 속에 HTML 코드가`** 들어가는 형태인데, 
+
+**JSP** 는 이와 반대로 **`HTML 소스코드 속에 java source code 가 들어가는 구조`** 를 갖는 **web application programming 기술** 입니다. 
 
 HTML 속에서 java code 는 **`<% 소스코드 %>`** 또는 **`<%= 소스코드 =%>`** 형태로 들어갑니다. 
 
