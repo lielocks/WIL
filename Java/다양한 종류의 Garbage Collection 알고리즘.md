@@ -127,7 +127,7 @@ G1 GC 는 각 지역을 추적하고 있기 때문에, garbage 가 가장 많은
 물론 G1 GC는 다른 GC 방식에 비해 **잦게** 호출될 것이다. 
 하지만 `작은 규모` 의 메모리 정리 작업이고 `Concurrent하게 수행` 되기 때문이 지연이 크지 않으며, 가비지가 많은 지역에 대해 정리를 하므로 훨씬 효율적이다.
 
-![image](https://github.com/lielocks/WIL/assets/107406265/ded7f620-4eac-44d7-82bc-4bf09d52cdc1)
+![image](https://github.com/lielocks/WIL/assets/107406265/f93fea2d-18f4-40c9-aeec-640f8698c231)
 
 이러한 구조의 G1 GC 는 당연히 앞의 어떠한 GC 방식보다 처리 속도가 빠르며 큰 메모리 공간에서 멀티 프로세스 기반으로 운영되는 어플리케이션을 위해 고안되었다.
 
