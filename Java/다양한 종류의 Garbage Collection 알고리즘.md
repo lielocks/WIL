@@ -90,7 +90,7 @@ G1(Garbage First) GC는 장기적으로 많은 문제를 일으킬 수 있는 CM
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/7c1c6227-1c17-47a2-8878-3e40629316f8)
 
-G1 GC 에서는 Eden, Survivor, Old 역할에 더해 Humonogous 와 Availavle / Unused 라는 2가지 역할을 추가하였다.
+G1 GC 에서는 Eden, Survivor, Old 역할에 더해 *Humonogous* 와 *Availavle / Unused* 라는 2가지 역할을 추가하였다.
 
 **`Humonguous`** 는 **Region 크기의 50% 를 초과하는 객체를 저장하는 Region** 을 의미하며,
 **`Avaliable / Unused`** 는 **사용되지 않은 Region** 을 의미한다.
