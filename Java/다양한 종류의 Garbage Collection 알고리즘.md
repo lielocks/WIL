@@ -36,7 +36,8 @@ Parallel GC 는 `Multi Processor 또는 Multi Thread Machine` 에서 중간 규�
 
 옵션을 통해 어플리케이션의 **`최대 지연시간`** 또는 **`GC 를 수행할 thread 의 갯수`** 를 설정해줄 수 있다.
 
-![image](https://github.com/lielocks/WIL/assets/107406265/5a891266-981f-4542-92a8-078c6d84eaaa)
+![image](https://github.com/lielocks/WIL/assets/107406265/7c25266d-0d14-47ed-8a1e-4fcea92ba809)
+
 
 Parallel GC 가 **GC 의 오버헤드를 상당히 줄여주었고** , Java8까지 `기본 가비지 컬렉터(Default Garbage Collector)` 로 사용되었다. 
 
