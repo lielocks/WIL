@@ -73,10 +73,64 @@ CMS GC 가 수행될 때에는 자원이 GC 를 위해서도 사용되므로 응
 
 만약 GC가 수행되면서 98% 이상의 시간이 CMS GC에 소요되고, 2% 이하의 시간이 Heap의 정리에 사용된다면 CMS GC에 의해 OutOfMemoryError가 던져질 것이다. 
 
-물론 이를 disable 하는 옵션이 있지만, CMS GC는 Java9 버젼부터 deprecated 되었고 결국 Java14에서는 사용이 중지되었기 때문에 굳이 알아볼 필요는 없을 것 같다.
+물론 이를 disable 하는 옵션이 있지만, CMS GC는 Java9 버젼부터 deprecated 되었고 결국 `Java14에서는 사용이 중지` 되었기 때문에 굳이 알아볼 필요는 없을 것 같다.
 
 <br>
 
 ### [G1 (Garbage First) GC]
+
+G1(Garbage First) GC는 장기적으로 많은 문제를 일으킬 수 있는 CMS GC를 대체하기 위해 개발되었고, Java7부터 지원되기 시작하였다.
+
+`기존의 GC 알고리즘` 에서는 **Heap 영역**을 물리적으로 **`Young 영역(Eden 영역과 2개의 Survivor 영역)과 Old 영역`** 으로 나누어 사용하였다. 
+
+**`G1 GC`** 는 **Eden 영역에 할당하고, Survivor로 카피하는 등의 과정을 사용** 하지만 **`물리적으로 메모리 공간을 나누지 않는다.`** 
+
+대신 **`Region(지역)`** 이라는 개념을 새로 도입하여 **Heap을 균등하게 여러 개의 지역으로 나누고,** *각 지역을 역할과 함께 논리적으로 구분* 하여 `(Eden 지역인지, Survivor 지역인지, Old 지역인지)` **객체를 할당한다.**
+
+![image](https://github.com/lielocks/WIL/assets/107406265/7c1c6227-1c17-47a2-8878-3e40629316f8)
+
+G1 GC 에서는 Eden, Survivor, Old 역할에 더해 Humonogous 와 Availavle / Unused 라는 2가지 역할을 추가하였다.
+
+**`Humonguous`** 는 **Region 크기의 50% 를 초과하는 객체를 저장하는 Region** 을 의미하며,
+**`Avaliable / Unused`** 는 **사용되지 않은 Region** 을 의미한다.
+
+G1 GC 의 핵심은 **`Heap 을 동일한 크기의 Region`** 으로 나누고, `garbage 가 많은 Region` 에 대해 **우선적으로 GC** 를 수행하는 것이다.
+
+그리고 G1 GC 도 다른 garbage collection 과 마찬가지로 2가지 GC(Minor GC, Major GC) 로 나누어 수행되는데, 각각에 대해 살펴보자.
+
+<br>
+
+### 1. Minor GC
+
+한 지역에 객체를 할당하다가 *해당 지역이 꽉 차면* **다른 지역에 객체를 할당하고,** **`Minor GC`** 가 실행된다.
+
+G1 GC 는 각 지역을 추적하고 있기 때문에, garbage 가 가장 많은 **(Garbage First) 지역을 찾아서 Mark and Sweep** 를 수행한다.
+
+`Eden 지역` 에서 GC 가 수행되면 ***살아남은 객체를 식별(Mark) 하고, 메모리를 회수(Sweep)*** 한다.
+그리고 ***살아남은 객체를 다른 지역으로 이동*** 시키게 된다.
+
+`복제되는 지역이 Available / Unused 지역` 이면 **해당 지역은 이제 Survivor 영역** 이 되고, **Eden 영역은 Available / Unused 지역** 이 된다.
+
+<br>
+
+### 2. Major GC (Full GC)
+
+시스템이 계속 운영되다가 객체가 너무 많아 빠르게 메모리를 회수할 수 없을 때 Major GC(Full GC) 가 실행된다. 그리고 여기서 G1 GC 와 다른 GC 의 차이점이 두각을 보인다.
+
+`기존의 다른 GC 알고리즘` 은 모두 **Heap 영역에서 GC 가 수행** 되었으며, 그에 따라 ***처리 시간이 상당히 오래 걸렸다.*** 
+
+하지만 G1 GC 는 `어느 영역에 garbage 가 많은지를 알고 있기 때문에` **GC 를 수행할 지역을 조합하여 해당 지역에 대해서만 GC 를 수행** 한다.
+
+그리고 이러한 작업은 **Concurrent 하게 수행되기 때문에 어플리케이션의 지연도 최소화** 할 수 있는 것이다.
+
+물론 G1 GC는 다른 GC 방식에 비해 **잦게** 호출될 것이다. 
+하지만 `작은 규모` 의 메모리 정리 작업이고 `Concurrent하게 수행` 되기 때문이 지연이 크지 않으며, 가비지가 많은 지역에 대해 정리를 하므로 훨씬 효율적이다.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/ded7f620-4eac-44d7-82bc-4bf09d52cdc1)
+
+이러한 구조의 G1 GC 는 당연히 앞의 어떠한 GC 방식보다 처리 속도가 빠르며 큰 메모리 공간에서 멀티 프로세스 기반으로 운영되는 어플리케이션을 위해 고안되었다.
+
+**또한 G1 GC 는 다른 GC 방식의 처리속도를 능가하기 때문에 Java 9 부터 기본 가비지 컬렉터 (Default Garbage Collector) 로 사용되게 되었다.**
+
 
 
