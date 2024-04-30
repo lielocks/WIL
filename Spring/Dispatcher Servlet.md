@@ -105,13 +105,13 @@ Dispatcher Servlet의 처리 과정을 살펴보면 다음과 같습니다.
 
 ### 1. 클라이언트의 요청을 Dispatcher Servlet 이 받음
 
-앞서 설명하였듯 디스패처 서블릿은 가장 먼저 요청을 받는 Front Controller 입니다.
+앞서 설명하였듯 디스패처 서블릿은 가장 먼저 요청을 받는 **`Front Controller`** 입니다.
 
 Servlet Context(Web Context) 에서 필터들을 지나 Spring Context 에서 Dispatcher Servlet 이 가장 먼저 요청을 받게 됩니다.
 
 이를 그림으로 표현하면 다음과 같습니다.
 
-실제로는 Interceptor 가 Controller 로 요청을 위임하지는 않으므로, 아래의 그림은 처리 순서를 도식화한 것으로만 이해하면 됩니다.
+실제로는 `Interceptor 가 Controller 로 요청을 위임하지는 않으므로,` 아래의 그림은 처리 순서를 도식화한 것으로만 이해하면 됩니다.
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/6dbe38fd-07e4-425d-8d04-d96d065370b3)
 
@@ -119,33 +119,34 @@ Servlet Context(Web Context) 에서 필터들을 지나 Spring Context 에서 Di
 
 ### 2. 요청 정보를 통해 요청을 위임할 Controller 를 찾음
 
-Dispatcher Servlet 은 요청을 처리할 Handler(Controller)를 찾고 해당 객체의 메서드를 호출합니다.
-따라서 가장 먼저 어느 controller 가 요청을 처리할 수 있는지를 식별해야 하는데, 해당 역할을 하는 것이 바로 HandlerMapping 입니다.
+Dispatcher Servlet 은 **요청을 처리할 Handler(Controller)** 를 찾고 **해당 객체의 메서드를 호출** 합니다.
+따라서 가장 먼저 *어느 controller 가 요청을 처리할 수 있는지를 식별* 해야 하는데, 해당 역할을 하는 것이 바로 **`HandlerMapping`** 입니다.
 
 최근에는 @Controller 에 @ReqeustMapping 관련 어노테이션을 사용해 controller 를 작성하는 것이 일반적입니다.
 
 하지만 예전 스펙을 따라 Controller 인터페이스를 구현하여 controller 를 작성할 수도 있습니다.
-즉, controller 를 구현하는 방법이 다양하기 때문에 spring 은 HandlerMapping 인터페이스를 만들어두고, 다양한 구현 방법에 따라 요청을 처리할 대상을 찾도록 되어 있습니다.
+즉, controller 를 구현하는 방법이 다양하기 때문에 spring 은 **HandlerMapping 인터페이스** 를 만들어두고, 다양한 구현 방법에 따라 요청을 처리할 대상을 찾도록 되어 있습니다.
 
-오늘날 흔한 @Controller 방식은 RequestMappingHandlerMapping 가 처리합니다.
-이는 @Controller 로 작성된 모든 컨트롤러를 찾고 파싱하여 HashMap 으로 <요청 정보, 처리할 대상> 관리합니다.
+오늘날 흔한 @Controller 방식은 **`RequestMappingHandlerMapping`** 가 처리합니다.
+이는 @Controller 로 작성된 **모든 컨트롤러를 찾고 파싱하여 HashMap 으로 <요청 정보, 처리할 대상> 관리** 합니다.
 
-여기서 처리할 대상은 HandlerMethod 객체로 controller, method 등을 갖고 있는데, 이는 spring 이 reflection 을 이용해 요청을 위임하기 때문입니다.
+여기서 `처리할 대상은 HandlerMethod 객체` 로 controller, method 등을 갖고 있는데, 이는 **spring 이 reflection 을 이용해 요청을 위임** 하기 때문입니다.
 
-그래서 요청이 오면 (Http Method, URI) 등을 사용해 요청 정보를 만들고,
-HashMap 에서 요청을 처리할 대상(Handler Method) 를 찾은 후에 HandlerExecutionChain 으로 감싸서 반환합니다.
+그래서 요청이 오면 `(Http Method, URI) 등을 사용해 요청 정보를 만들고,`
+**HashMap 에서 요청을 처리할 대상(Handler Method) 를 찾은 후** 에 **`HandlerExecutionChain 으로 감싸서 반환`** 합니다.
 
-HandlerExecutionChain 으로 감싸는 이유는 controller 로 요청을 넘겨주기 전에 처리해야 하는 interceptor 등을 포함하기 위해서 입니다.
+HandlerExecutionChain 으로 감싸는 이유는 **controller 로 요청을 넘겨주기 전에 처리해야 하는 interceptor 등을 포함하기 위해서** 입니다.
 
 <br>
 
 ### 3. 요청을 Controller 로 위임할 Handler Adapter 를 찾아서 전달함
 
-이후에 controller 로 요청을 위임해야 하는데, Dispatcher Servlet 은 controller 로 요청을 직접 이ㅜ임하는 것이 아니라 HandlerAdapter 를 통해 위임합니다.
-그 이유는 앞서 설명하였듯 controller 의 구현 방식이 다양하기 때문입니다.
+이후에 controller 로 요청을 위임해야 하는데, Dispatcher Servlet 은 *controller 로 요청을 직접 위임하는 것이 아니라* **`HandlerAdapter 를 통해 위임`** 합니다.
+그 이유는 앞서 설명하였듯 controller 의 구현 방식이 **다양** 하기 때문입니다.
 
 spring 은 꽤나 오래 전에 (2004년) 만들어진 프레임워크로, 트렌드를 굉장히 잘 따라갑니다.
 프로그래밍 흐름에 맞게 spring 역시 변화를 따라가게 되었는데, 그러면서 다양한 코드 작성 방식을 지원하게 되었습니다.
+
 과거에는 컨트롤러를 Controller 인터페이스로 구현하였는데, 
 Ruby On Rails가 어노테이션 기반으로 관례를 이용한 프로그래밍을 내세워 혁신을 일으키면서 spring 역시 이를 도입하게 되었습니다.
 
@@ -155,12 +156,13 @@ Ruby On Rails가 어노테이션 기반으로 관례를 이용한 프로그래�
 
 ### 4. Handler Adapther 가 Controller 로 요청을 위임함
 
-Handler Adapter 가 controller 로 요청을 위임한 전 / 후에 **공통적인 전 / 후처리 과정이 필요** 합니다.
+`Handler Adapter 가 controller 로 요청을 위임한 전 / 후` 에 **공통적인 전 / 후처리 과정이 필요** 합니다.
 
-대표적으로 interceptor 들을 포함해 요청 시에 @RequestParam, @RequestBody 등을 처리하기 위한 ArgumentResolver 들과 
-응답 시에 ResponseEntity 의 Body 를 Json 으로 직렬화하는 등의 처리를 하는 ReturnValueHandler 등이 handler adapter 에서 처리됩니다.
+대표적으로 *interceptor 들을 포함해 요청 시에 @RequestParam, @RequestBody 등을 처리* 하기 위한 **`ArgumentResolver`** 들과 
 
-ArgumentResolver 등을 통해 파라미터가 준비되면 reflection 을 이용해 controller 로 요청을 위임합니다.
+*응답 시에 ResponseEntity 의 Body 를 Json 으로 직렬화하는 등의 처리* 를 하는 **`ReturnValueHandler`** 등이 **handler adapter 에서 처리** 됩니다.
+
+ArgumentResolver 등을 통해 파라미터가 준비되면 reflection 을 이용해 **controller 로 요청을 위임합니다.**
 
 <br>
 
@@ -175,7 +177,8 @@ ArgumentResolver 등을 통해 파라미터가 준비되면 reflection 을 이�
 business logic 이 처리된 후에는 controller 가 반환값을 반환합니다. 
 
 응답 데이터를 사용하는 경우에는 주로 **`ResponseEntity`** 를 반환하게 되고, 응답 페이지를 보여주는 경우라면 String으로 View의 이름을 반환할 수도 있습니다. 
-요즘 프론트엔드와 백엔드를 분리하고, MSA로 가고 있는 시대에서는 주로 ResponseEntity를 반환합니다.
+
+요즘 프론트엔드와 백엔드를 분리하고, MSA로 가고 있는 시대에서는 주로 **`ResponseEntity`** 를 반환합니다.
 
 <br>
 
@@ -197,6 +200,7 @@ Dispatcher Servlet 을 통해 반환되는 응답은 다시 필터들을 거쳐 
  
 <br>
 
+<br>
 
 
 # Spring 에서 API에 매핑되는 컨트롤러와 메소드 조회하여 직접 호출하기(HandlerMapping과 HandlerMethod)
