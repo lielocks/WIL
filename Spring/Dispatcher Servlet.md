@@ -197,6 +197,8 @@ Dispatcher Servlet 을 통해 반환되는 응답은 다시 필터들을 거쳐 
  
 <br>
 
+
+
 # Spring 에서 API에 매핑되는 컨트롤러와 메소드 조회하여 직접 호출하기(HandlerMapping과 HandlerMethod)
 
 최근에 어디에선가 API 에 매힝되는 controller 와 method 를 찾는 방법이 있냐는 질문을 보게 되었는데요.
