@@ -202,6 +202,1056 @@ Dispatcher Servlet 을 통해 반환되는 응답은 다시 필터들을 거쳐 
 
 <br>
 
+# SpringBoot 소스 코드와 DispatcherServlet  동작 과정 살펴보기
+
+## 1. DispatcherServlet 디스패처 서블릿 동작 과정
+
+Dispatcher Servlet 은 **모든 요청을 가장 먼저 받는 Front Controller** 이다.
+
+Dispatcher Servlet 을 이해하기 위해 가장 먼저 계층 구조부터 살펴보자.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/77c957e6-b9c4-4d05-b87f-e4ee01936456)
+
+<br>
+
+위의 여기서 우리가 주목해야 할 부분은 크게 다음과 같다.
+
++ **HttpServlet**
+
+  + Http 서블릿을 구현하기 위한 J2EE 스펙의 추상 클래스
+ 
+  + 특정 HTTP 메서드를 지원하기 위해서는 doX 메서드를 오버라이딩 해야 함 (template method pattern)
+ 
+  + doPatch 는 지원하지 않음 (아래에서 살펴볼 예정)
+ 
+<br>
+
++ **HttpServletBean**
+
+  + HttpServlet 을 Spring 이 구현한 추상 클래스
+ 
+  + Spring 이 모든 유형의 servlet 구현을 위해 정의한 공통 클래스
+ 
+<br>
+
++ **FrameworkServlet**
+
+  + Spring web Framework 의 기반이 되는 servlet
+ 
+  + doX 메서드를 오버라이딩하고 있으며, doX 요청들을 공통된 요청 처리 메서드인 processRequest 로 전달함
+ 
+  + processRequest 에서 실제 요청 핸들링은 추상 메서드 doService 로 위임됨 (template method pattern)
+ 
+<br>
+
++ **DispatcherServlet**
+
+  + Controller 로 요청을 전달하는 중앙 집중형 Front controller(Servlet 구현체)
+ 
+  + 실제 요청을 처리하는 doService 를 구현하고 있음
+
+<br>
+
+Dispatcher Servlet 이 요청을 받아서 controller 로 위임하는 과정을 자세히 살펴보자.
+
+1. `Servlet 요청 / 응답` 을 `HTTP Servlet 요청 / 응답` 으로 변환
+
+2. `HTTP Method` 에 따른 처리 작업 진행
+
+3. 요청에 대한 `공통 처리` 작업 진행
+
+4. `Controller 로 요청을 위임`
+
+   1. 요청에 매핑되는 **HandlerExecutionChain** 조회
+  
+   2. 요청을 처리할 **HandlerAdapter** 조회
+  
+   3. HandlerAdapter 를 통해 **Controller Method 호출** (HandlerExecutionChain 처리)
+
+<br>
+
+### 1. Servlet 요청 / 응답을 HTTP Servlet 요청 / 응답으로 변환
+
+HTTP 요청은 등록된 필터들을 거쳐 Dispatcher Servlet 이 처리하게 되는데,
+
+**가장 먼저 요청을 받는 부분** 은 **`부모 클래스인 HttpServlet 에 구현된 service 메서드`** 이다.
+
+```java
+public abstract class HttpServlet extends GenericServlet {
+
+    ...
+
+    @Override
+    public void service(ServletRequest req, ServletResponse res)
+        throws ServletException, IOException {
+
+        HttpServletRequest  request;
+        HttpServletResponse response;
+
+        try {
+            request = (HttpServletRequest) req;
+            response = (HttpServletResponse) res;
+        } catch (ClassCastException e) {
+            throw new ServletException(lStrings.getString("http.non_http"));
+        }
+        service(request, response);
+    }
+
+    protected void service(HttpServletRequest req, HttpServletResponse resp)
+        throws ServletException, IOException {
+        ...
+    }
+    
+    ...
+}
+```
+
+service 에서는 먼저 **Servlet 관련 Request / Response 객체를 HTTP 관련 Request / Resposne 로 (캐스팅)** 해준다.
+
+캐스팅 시에 에러가 발생하면 HTTP 요청이 아니므로 에러를 던진다.
+
+<br>
+
+### 2. HTTP Method 에 따른 처리 작업 진행
+
+그리고 `HttpServletRequest 객체를 parameter 로 갖는 service 메서드` 를 호출하는데, HttpServlet 에도 service 가 있지만 
+
+**자식 클래스인 FrameworkServlet 에 service 가 오버라이딩 되어 있어 자식의 메서드가 호출** 된다.
+
+해당 로직을 보면 다음과 같다.
+
+```java
+public abstract class FrameworkServlet extends HttpServletBean implements ApplicationContextAware {
+
+    ...
+
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+
+	HttpMethod httpMethod = HttpMethod.resolve(request.getMethod());
+	if (httpMethod == HttpMethod.PATCH || httpMethod == null) {
+	    processRequest(request, response);
+	}
+	else {
+	    super.service(request, response);
+	}
+	
+	...
+    }
+}
+```
+
+<br>
+
+자식 클래스인 FrameworkServlet 의 service 는 PATCH 메서드인 경우 processRequest 를 호출하고,
+
+PATCH 메서드가 아니면 다시 부모 클래스인 HttpServlet 의 service 를 호출해주고 있다.
+
+이상하게도 PATCH 메서드만 이러한 흐름을 거치는 이유는 PATCH 메서드의 탄생과 관련이 있다.
+
+과거 HTTP 표준에는 PATCH 메소드가 존재하지 않았다. 
+그러다가 2010년도에 Ruby on Rails가 부분 수정의 필요를 주장하였고, 2010년도에 공식 HTTP 프로토콜로 추가되었다.
+
+이러한 이유로 javax의 HttpServlet에는 doPatch 메소드가 존재하지 않아서 Spring 개발팀은 PATCH 요청을 처리하고자 **자체적으로 개발한 FrameworkServlet** 를 거쳐 PATCH라면 핸들링하고, 
+
+그렇지 않은 경우에는 **다시 자바 표준 기술인 부모 클래스 HttpServlet** 이 처리하도록 대응한 것이다. 
+
+`PATCH가 아닌 경우에 처리되는 로직` 은 다음과 같다.
+
+```java
+public abstract class HttpServlet extends GenericServlet {
+
+    ...
+
+    protected void service(HttpServletRequest req, HttpServletResponse resp)
+        throws ServletException, IOException {
+
+        String method = req.getMethod();
+
+        if (method.equals(METHOD_GET)) {
+            ... // lastModifed에 따른 doGet 처리(요약함)
+            doGet(req, resp);
+
+        } else if (method.equals(METHOD_HEAD)) {
+            long lastModified = getLastModified(req);
+            maybeSetLastModified(resp, lastModified);
+            doHead(req, resp);
+
+        } else if (method.equals(METHOD_POST)) {
+            doPost(req, resp);
+
+        } else if (method.equals(METHOD_PUT)) {
+            doPut(req, resp);
+
+        } else if (method.equals(METHOD_DELETE)) {
+            doDelete(req, resp);
+
+        } else if (method.equals(METHOD_OPTIONS)) {
+            doOptions(req,resp);
+
+        } else if (method.equals(METHOD_TRACE)) {
+            doTrace(req,resp);
+
+        } else {
+            ... // 에러 처리
+        }
+    }
+
+    ...
+}
+```
+
+HttpServlet 에서는 요청 메서드에 따라 필요한 처리와 doX 메서드를 호출해주고 있다.
+
+그러면 `doX 메서드를 오버라이딩 하고 있는 자식 클래스` 인 **FrameworkServlet 으로 다시 요청** 이 이어지게 된다.
+
+PATCH 를 제외한 메서드들에 대해 Template Method Pattern 이 적용된 것이다.
+
+`오버라이딩된 doX 메서드` 는 다음과 같이 구현되어 있다.
+
+
+```java
+public abstract class FrameworkServlet extends HttpServletBean implements ApplicationContextAware {
+
+    ... 
+
+    @Override
+    protected final void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        processRequest(request, response);
+    }
+    
+    @Override
+    protected final void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        processRequest(request, response);
+    }
+
+    ...
+}
+```
+
+<br>
+
+각각의 doX 메서드에서는 HTTP Method 에 맞는 작업을 하는데, doGet 에서 lastModified 관련 처리를 해주는 것 말고는 거의 없다.
+
+그리고 결국 모든 doX 메서드들은 processRequest 를 거치게 되는데, 해당 과정을 살펴보자.
+
+<br>
+
+### 3. 요청에 대한 공통 처리 작업 진행
+
+**오버라이딩된 doX 메서드** 는 모두 **`request 를 처리하는 processRequest 메서드`** 를 호출하고 있다.
+
+```java
+protected final void processRequest(HttpServletRequest request, HttpServletResponse response)
+		    throws ServletException, IOException {
+
+    ... // LocaleContextHolder 처리 등 생략
+
+    try {
+        doService(request, response);
+    } catch (ServletException | IOException ex) {
+        failureCause = ex;
+        throw ex;
+    } catch (Throwable ex) {
+        failureCause = ex;
+        throw new NestedServletException("Request processing failed", ex);
+    } finally {
+        ... // 후처리 진행
+    }
+}
+
+protected abstract void doService(HttpServletRequest request, HttpServletResponse response)
+        throws Exception;
+```
+
+<br>
+
+**`processRequest`** 에서는 **request 에 대한 공통 작업** 을 한 후에, 드디어 **doService** 를 호출하고 있다.
+
+앞서 설명한대로 **`doService`** 는 Template Method Pattern 이 적용된 추상 메서드이므로 **자식 클래스인 DispatcherServlet** 에 가야 해당 코드를 볼 수 있다.
+
+DispatcherServlet 의 doService 코드는 다음과 같다.
+
+<br>
+
+```java
+public class DispatcherServlet extends FrameworkServlet {
+
+    ...
+
+    @Override
+    protected void doService(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logRequest(request);
+
+        ... // flash map 등의 처리 진행
+
+        try {
+            doDispatch(request, response);
+        } finally {
+            ... // 후처리 진행
+        }
+    }
+
+    ...
+
+}
+```
+
+<br>
+
+processRequest 와 doService 에서는 LocaleContextHolder 와 flashMap 등에 대한 공통 처리 작업이 진행되는데, 그렇게 중요하지 않다.
+
+우리가 주목해야 할 부분은 HTTP 요청을 controller 로 위임해주는 doDispatch 이므로 바로 해당 단계로 넘어가보자.
+
+<br>
+
+### 4. Controller 로 요청을 위임
+
+여기서부터 이제 중요하다. 
+
+**Controller 로 요청을 위임하는 doDispatch** 는 크게 다음의 3가지 단계로 나뉜다.
+
+1. 요청에 매핑되는 **`HandlerMapping (HandlerExecutionChain)`** 조회
+
+2. 요청을 처리하는 **`HandlerAdapter`** 조회
+
+3. **HandlerAdapter 를 통해 controller method 호출** (HandlerExecutionChain 처리)
+
+<br>
+
+doDispatch 코드는 다음과 같은데, 마찬가지로 각각의 단계에 대해 세부적으로 살펴보자.
+
+```java
+protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    HttpServletRequest processedRequest = request;
+    HandlerExecutionChain mappedHandler = null;
+    boolean multipartRequestParsed = false;
+
+    WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
+
+    try {
+        ModelAndView mv = null;
+        Exception dispatchException = null;
+
+        try {
+            processedRequest = checkMultipart(request);
+            multipartRequestParsed = (processedRequest != request);
+
+            // 1. 요청에 패핑되는 HandlerMapping (HandlerExecutionChain) 조회
+            mappedHandler = getHandler(processedRequest);
+            if (mappedHandler == null) {
+                noHandlerFound(processedRequest, response);
+                return;
+            }
+
+            // 2. 요청을 처리할 HandlerAdapter 조회
+            HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
+
+            ...
+
+            // 3. HandlerAdapter를 통해 컨트롤러 메소드 호출(HandlerExecutionChain 처리)
+            mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+
+            ... // 후처리 진행(인터셉터 등)
+        } catch (Exception ex) {
+            dispatchException = ex;
+        } catch (Throwable err) {
+            // As of 4.3, we're processing Errors thrown from handler methods as well,
+            // making them available for @ExceptionHandler methods and other scenarios.
+            dispatchException = new NestedServletException("Handler dispatch failed", err);
+        }
+        processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
+    } catch (Exception ex) {
+        triggerAfterCompletion(processedRequest, response, mappedHandler, ex);
+    } catch (Throwable err) {
+        triggerAfterCompletion(processedRequest, response, mappedHandler,
+            new NestedServletException("Handler processing failed", err));
+    } finally {
+        ... // 후처리 진행
+    }
+}
+```
+
+<br>
+
+**1. 요청에 매핑되는 HandlerMapping (HandlerExecutionChain) 조회**
+
+doDispatch 에서도 우리가 볼 부분은 그렇게 많지 않은데, 가장 먼저 볼 부분은 **HandlerMapping 에 해당하는 HandlerExecutionChain 을 조회하는 부분이다.**
+
+**`HandlerExecutionChain`** 은 **HandlerMethod 와 Interceptor 들로 구성된다.**
+
+HandlerMethod 에는 `매핑되는 controller 의 메서드` 와 `controller bean 이름(또는 controller bean) 및 Bean Factory` 등이 저장되어 있는데, 다음과 같은 특징을 지닌다.
+
++ **매핑되는 controller 의 메서드**
+
+  + Reflection 패키지의 Method 객체
+ 
+  + Method 를 호출(invoke) 하기 위해서는 method 의 주인인 Bean 객체를 필요로 함
+ 
+<br>
+
++ **Bean 정보** (Controller bean 이름 or controller bean)
+
+  + Object 타입으로써 controller bean 이름(기본) or controller bean 이 될 수 있음
+ 
+  + 기본적으로 controller bean 이름을 갖고 있으며, bean 객체 조회를 위해 사용됨
+ 
+  + HandlerMethod 의 createWithResolvedBean 을 호출하면 bean 이름이 아닌 실제 bean 을 갖는 HandlerMethod 객체를 생성함
+ 
+<br>
+
++ **Bean Factory**
+
+  + Spring Boot 가 관리하는 bean 들을 가지고 있음
+ 
+  + Controller 의 method 를 호출하기 위한 bean 객체 조회를 위해 사용됨
+
+<br>
+
+HandlerMethod 에 저장된 Method 객체를 호출(invoke) 하기 위해서는 method 의 주인인 객체를 넘겨줘야 한다.
+
+그런데 HandlerMethod 는 기본적으로 controller bean 이름을 갖고 있으므로, Bean Factory 를 통해 controller 객체를 찾아서 Method 를 호출 시에 넘겨주도록 Bean Factory 를 가지고 있는 것이다.
+
+Controller Bean 이름만 있는 HandlerMethod 객체의 createWithResolvedBean 을 호출하면 bean 이름 대신 `실제 bean 을 갖는 HandlerMethod 객체가 반환된다.`
+
+Dispatcher Servlet 이 HandlerMethod 가 아닌 **HandlerExecutionChain 을 얻는 이유는 공통 처리를 위한 interceptor 가 존재하기 때문이다.**
+
+이제 HandlerExecutionChain를 찾는 getHandler부터 봐보도록 하자. getHandler 코드는 다음과 같다.
+
+```java
+@Nullable
+protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+    if (this.handlerMappings != null) {
+        for (HandlerMapping mapping : this.handlerMappings) {
+            HandlerExecutionChain handler = mapping.getHandler(request);
+            if (handler != null) {
+                return handler;
+            }
+        }
+    }
+    return null;
+}
+```
+
+<br>
+
+getHandler에서는 HandlerMapping 목록을 순회하여 `HandlerExecutionChain` 를 찾는다. 
+
+최근에는 컨트롤러를 @Controller와 @RequestMapping 관련 어노테이션으로 작성하므로, 이를 처리하는 RequestMappingHandlerMapping가 HandlerExecutionChain를 생성해 반환한다. 
+
+해당 과정을 자세히 살펴보기 위해 **`getHandlerInternal`** 를 보도록 하자.
+
+```java
+@Override
+@Nullable
+public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+    Object handler = getHandlerInternal(request);
+    if (handler == null) {
+        handler = getDefaultHandler();
+    }
+    if (handler == null) {
+        return null;
+    }
+    // Bean name or resolved handler?
+    ...
+
+    HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
+
+    ... // CORS 및 기타 처리
+
+    }
+
+    return executionChain;
+}
+```
+
+HandlerMethod를 찾는 `RequestMappingHandlerMapping의 getHandlerInternal` 는 내부적으로 다시 **추상 부모 클래스인 AbstractHandlerMethodMapping의 `getHandlerInternal`**로 위임되는데, 
+
+해당 코드를 보면 다음과 같다.
+
+
+```java
+@Override
+@Nullable
+protected HandlerMethod getHandlerInternal(HttpServletRequest request) throws Exception {
+    String lookupPath = initLookupPath(request);
+    this.mappingRegistry.acquireReadLock();
+    try {
+        HandlerMethod handlerMethod = lookupHandlerMethod(lookupPath, request);
+        return (handlerMethod != null ? handlerMethod.createWithResolvedBean() : null);
+    } finally {
+        this.mappingRegistry.releaseReadLock();
+    }
+}
+```
+
+가장 먼저 API URI인 lookupPath를 찾아주고, mappingRegistry에 대해 *readLock을 얻은 다음에 HandlerMethod* 를 찾고 있다.
+
+실제로 조회한 **HandlerMethod** 의 예시를 보면 다음과 같은데, `빈 으름과 빈팩토리, 메소드 객체` 가 있는 것을 볼 수 있다.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/f55cba09-fe9a-4b94-b45a-8825db028ce6)
+
+<br>
+
+이러한 HandlerMethod 를 찾는 lookupHandlerMethod 는 코드로 보지 말고 설명으로만 읽고 넘어가도록 하자.
+
+Spring 은 어플리케이션이 초기화때 **모든 controller 를 파싱** 해서 `(요청정보, 요청 정보를 처리할 대상)` 을 관리해둔다.
+
+그리고 요청이 들어오면 가장 먼저 URI 를 기준으로 매핑되는 후보군들을 찾는다.
+
+만약 동일한 URI 에 대해 POST, PUT 메서드가 있으면 2개의 후보군이 찾아진다.
+
+그리고 HTTP Method 와 다른 조건들을 통해 완전히 매핑되는지 검사한다.
+
+매핑 정보는 다음과 같은 RequestMappingInfo 클래스이다.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/8a37859f-fe41-4890-8665-6f5d4068fe8d)
+
+<br>
+
+그러면 다시 이제 요청을 처리할 대상을 찾는 **`getHandler`** 로 넘어오도록 하자.
+
+```java
+@Override
+@Nullable
+public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+    Object handler = getHandlerInternal(request);
+    if (handler == null) {
+        handler = getDefaultHandler();
+    }
+    if (handler == null) {
+        return null;
+    }
+    // Bean name or resolved handler?
+    ...
+
+    HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
+
+    ... // CORS 및 기타 처리
+
+    }
+
+    return executionChain;
+}
+```
+
+<br>
+
+위와 같이 찾아진 **HandlerMethod** 는 최종적으로 **HandlerExecutionChain 으로 반환** 된다.
+
+왜냐하면 `controller 에 요청을 위임하기 전에 처리해야 하는 interceptor` 들이 있으므로,
+**HandlerMethod 와 interceptor 를 갖는** **`HandlerExecutionChain 을 만들어 반환`** 해주는 것이다.
+
+그럼 다시 Dispatcher Servlet 으로 넘어와서 이번에는 HandlerAdpater 를 조회하는 로직을 보도록 하자.
+
+<br>
+
+**2. 요청을 처리할 Handler Adapter 조회**
+
+Dispatcher Servlet 은 ***HandlerExecutionChain 을 직접 실행하지 않고,***
+**HandlerAdpater 라는 어댑터 인터페이스를 통해 실행한다.**
+
+과거에는 controller 를 interface 로 만들었는데, 최근에는 어노테이션으로 만드는 방식이 주로 이용된다.
+
+즉 다양하게 controller 를 만들 수 있는데, format 이 다르므로 HandlerAdpater 라는 어댑터 interface 를 둠으로써 controller 의 구현 방식에 상관없이 요청을 위임하도록 adapter interface 를 사용한 것이다.
+
+**doDispatch 에서는 getHandlerAdapter 를 통해 HandlerAdapter 를 조회한다.**
+
+```java
+protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    HttpServletRequest processedRequest = request;
+    HandlerExecutionChain mappedHandler = null;
+    boolean multipartRequestParsed = false;
+
+    WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
+
+    try {
+        ModelAndView mv = null;
+        Exception dispatchException = null;
+
+        try {
+            processedRequest = checkMultipart(request);
+            multipartRequestParsed = (processedRequest != request);
+
+            // 1. 요청에 패핑되는 HandlerExecutionChain 조회
+            mappedHandler = getHandler(processedRequest);
+            if (mappedHandler == null) {
+                noHandlerFound(processedRequest, response);
+                return;
+            }
+
+            // 2. 요청을 처리할 HandlerAdapter 조회
+            HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
+
+            ...
+
+            // 3. HandlerAdapter를 통해 컨트롤러 메소드 호출(HandlerExecutionChain 처리)
+            mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+
+            ... // 후처리 진행(인터셉터 등)
+        } catch (Exception ex) {
+            dispatchException = ex;
+        } catch (Throwable err) {
+            // As of 4.3, we're processing Errors thrown from handler methods as well,
+            // making them available for @ExceptionHandler methods and other scenarios.
+            dispatchException = new NestedServletException("Handler dispatch failed", err);
+        }
+        processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
+    } catch (Exception ex) {
+        triggerAfterCompletion(processedRequest, response, mappedHandler, ex);
+    } catch (Throwable err) {
+        triggerAfterCompletion(processedRequest, response, mappedHandler,
+            new NestedServletException("Handler processing failed", err));
+    } finally {
+        ... // 후처리 진행
+    }
+}
+```
+
+<br>
+
+*어노테이션(@RequestMapping) 으로 구현된 controller 에 대한 API 요청* 인 경우에는 *RequestMapping HandlerAdapter* 가 찾아진다.
+
+하지만 컨트롤러는 Controller 인터페이스로 구현하는 등 다양하게 구성이 가능하므로,
+spring 은 **controller 구현 방식에 따라 호환 가능** 하도록 **`adapter interface 인 Handler Adapter`** 를 생성하였다. 
+
+<br>
+
+**3. HandlerAdapter 를 통해 controller method 호출 (HandlerExecutionChain 처리)**
+
+HandlerAdapter 를 통해 HandlerExecutionChain을 처리하는데, 내부적으로 interceptor 를 가지고 있어 공통적인 전 / 후 처리 과정이 처리된다.
+
+대표적으로 
++ **controller method 호출 전에는 적합한 parameter 를 만들어 넣어주어야 하며(ArgumentResolver)**,
+
++ **호출 후에는 메세지 컨버터를 통해 ResponseEntity 의 Body 를 찾아 Json 직렬화하는 등(ReturnValueHandler)** 이 필요하다.
+
+`적합한 HandlerAdapter 가 HandlerExectutionChain 을 모두 찾았으면` 이제 **Handler Adapter 가 요청을 처리** 할 차례이다.
+
+AbstractHandlerMethodAdapter 를 보면 **handle 메서드** 가 다음과 같이 구현되어 있다.
+
+```java
+@Override
+@Nullable
+public final ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
+      throws Exception {
+
+   return handleInternal(request, response, (HandlerMethod) handler);
+}
+
+@Nullable
+   protected abstract ModelAndView handleInternal(HttpServletRequest request,
+      HttpServletResponse response, HandlerMethod handlerMethod) throws Exception;
+```
+
+<br>
+
+요청의 종류에 따라 HandlerAdapter 구현체가 달라지고, 그에 따라 전 / 후 처리가 달라지므로 세부 구현을 구체 클래스로 위임하는 Template Method Pattern 이 또 사용된 것 !
+
+대표적으로 `@Controller 로 작성된 controller 를 처리하는` **RequestMappingHandlerAdapter** 를 살펴보면 RequestMappingHandlerAdapter 의 **handleInternal 은 실제로 요청을 위임하는 `invokeHandlerMethod` 를 호출** 한다.
+
+```java
+@Override
+protected ModelAndView handleInternal(HttpServletRequest request,
+      HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
+
+   ModelAndView mav;
+   checkRequest(request);
+
+   // Execute invokeHandlerMethod in synchronized block if required.
+   if (this.synchronizeOnSession) {
+      ... // 생략
+   } else {
+      // No synchronization on session demanded at all...
+      mav = invokeHandlerMethod(request, response, handlerMethod);
+   }
+
+   ...
+      
+   return mav;
+}
+```
+
+여기서 InvokeHandlerMethod가 **컨트롤러로 요청을 위임하는 곳** 이므로 해당 코드를 살펴보도록 하자.
+
+```java
+@Nullable
+protected ModelAndView invokeHandlerMethod(HttpServletRequest request,
+      HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
+
+   ServletWebRequest webRequest = new ServletWebRequest(request, response);
+   try {
+      WebDataBinderFactory binderFactory = getDataBinderFactory(handlerMethod);
+      ModelFactory modelFactory = getModelFactory(handlerMethod, binderFactory);
+
+      ServletInvocableHandlerMethod invocableMethod = createInvocableHandlerMethod(handlerMethod);
+      if (this.argumentResolvers != null) {
+         invocableMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
+      }
+      if (this.returnValueHandlers != null) {
+         invocableMethod.setHandlerMethodReturnValueHandlers(this.returnValueHandlers);
+      }
+      
+      ...
+
+      invocableMethod.invokeAndHandle(webRequest, mavContainer);
+      
+      ...
+
+      return getModelAndView(mavContainer, modelFactory, webRequest);
+   } finally {
+      webRequest.requestCompleted();
+   }
+}
+```
+
+<br>
+
+ 
+여기서 먼저 주목할 부분은 **HandlerMethod가 ServletInvocableHandlerMethod로 재탄생** 한다는 것이다. 
+
+**`HandlerExecutionChain`** 에는 **공통적인 전 / 후 처리** 가 진행된다고 하였는데, 이러한 작업에는 대표적으로 ***컨트롤러의 파라미터를 처리하는 ArgumentResolver*** 와 ***반환값을 처리하는 ReturnValueHandler*** 가 있다.
+
+즉, **`ServletInvocableHandlerMethod`** 로 다시 만드는 이유는 **HandlerMethod와 함께 argumentResolver나 returnValueHandlers 등을 추가해 공통 전 / 후 처리** 를 하기 위함이다. 
+
+세팅이 끝나면 ServletInvocableHandlerMethod의 **invokeAndHandle** 로 이어진다.
+
+<br>
+
+```java
+public void invokeAndHandle(ServletWebRequest webRequest, ModelAndViewContainer mavContainer,
+      Object... providedArgs) throws Exception {
+
+   Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
+   setResponseStatus(webRequest);
+
+   ... 
+
+   try {
+      this.returnValueHandlers.handleReturnValue(
+            returnValue, getReturnValueType(returnValue), mavContainer, webRequest);
+   }
+   catch (Exception ex) {
+      ...
+      throw ex;
+   }
+}
+```
+
+<br>
+
+그리고는 바로 부모 클래스인 InvocableHandlerMethod의 invokeForRequest로 이어진다.
+
+```java
+@Nullable
+public Object invokeForRequest(NativeWebRequest request, @Nullable ModelAndViewContainer mavContainer,
+      Object... providedArgs) throws Exception {
+
+   Object[] args = getMethodArgumentValues(request, mavContainer, providedArgs);
+   if (logger.isTraceEnabled()) {
+	logger.trace("Arguments: " + Arrays.toString(args));
+   }
+   return doInvoke(args);
+}
+```
+
+<br>
+
+invokeForRequest에서는 먼저 메소드 호출을 위해 필요한 인자값을 처리한다.
+
+`@RequestHeader, @CookieValue 및 @PathVariable` 등도 모두 spring 이 만들어둔 **ArgumentResolver에 의해 처리** 가 되는데, 이러한 인자값을 만드는 작업이 **`getMethodArgumentValues`** 내에서 처리가 된다. 
+
+그리고 **doInvoke에서 만들어진 인자값(args)** 을 통해 **컨트롤러의 메소드를 호출** 한다.
+(getMethodArgumentValues에서 ArgumentResolver를 이용해 인자값을 처리하는 과정에는 컴포지트 패턴이 적용되어 있는데, 후처리하는 과정에서도 동일하게 사용되므로 이따가 살펴보도록 하자.)
+ 
+`doInvoke` 는 부모 클래스인 InvocableHandlerMethod에 다음과 같이 구현되어 있다.
+
+```java
+@Nullable
+protected Object doInvoke(Object... args) throws Exception {
+   Method method = getBridgedMethod();
+   try {
+      if (KotlinDetector.isSuspendingFunction(method)) {
+         return CoroutinesUtils.invokeSuspendingFunction(method, getBean(), args);
+      }
+      return method.invoke(getBean(), args);
+   } catch (IllegalArgumentException ex) {
+      ... // IllegalArgumentException 처리
+   } catch (InvocationTargetException ex) {
+      ... // Unwrap for HandlerExceptionResolvers ...
+   }
+}
+```
+
+<br>
+
+가장 먼저 요청을 처리할 controller 의 method 객체 (Java 의 리플렉션 method)를 꺼내온다.
+
+그리고 Method 객체의 invoke 를 통해서(Reflection 을 사용해서) 실제 controller 에게 위임을 해준다.
+
+Controller 에서 성공적으로 작업을 처리한 후에 ResponseEntity 를 반환했다면 **invokeAndHandler 의 returnValue 로** 해당 객체가 온다.
+
+```java
+private HandlerMethodReturnValueHandlerComposite returnValueHandlers;
+
+public void invokeAndHandle(ServletWebRequest webRequest, ModelAndViewContainer mavContainer,
+        Object... providedArgs) throws Exception {
+
+    Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
+
+    ...
+
+    try {
+        this.returnValueHandlers.handleReturnValue(
+            returnValue, getReturnValueType(returnValue), mavContainer, webRequest);
+        } catch (Exception ex) {
+            ...
+        }
+    }
+}
+```
+
+<br>
+
+그 다음에는 응답에 대한 후처리를 할 차례인데, 후처리는 returnValueHandlers를 통해 처리된다.
+
+ArgumentResolver로 요청을 전처리하는 과정과 ReturnValueHandler로 후처리하는 과정 모두에는 컴포지트 패턴이 적용되어 있다. 
+
+`요청` 을 처리하기 위한 인터페이스로 **HandlerMethodArgumentResolver** 가 있다면, `응답` 을 처리하기 위한 인터페이스로는 **HandlerMethodReturnValueHandler** 가 있다.
+
+```java
+public interface HandlerMethodReturnValueHandler {
+
+boolean supportsReturnType(MethodParameter returnType);
+
+void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
+         ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception;
+
+}
+```
+
+<br>
+
+응답에 따라 다양한 형태로 처리하기 위해서 이를 list 로 가지고 있으며,
+supportsReturnType 으로 처리 가능한 구현체인지를 판별해야 한다.
+
+Spring 은 HandlerMethodReturnValueHandler 인터페이스 목록을 가지고 있는 컴포지트 객체인 HandlerMethodReturnValueHandlerComposite를 만들어두고 HandlerMethodReturnValueHandler를 구현받도록 하여 컴포지트 패턴을 적용하고 있다.
+
+
+```java
+public class HandlerMethodReturnValueHandlerComposite implements HandlerMethodReturnValueHandler {
+
+   private final List<HandlerMethodReturnValueHandler> returnValueHandlers = new ArrayList<>();
+
+   @Override
+   public boolean supportsReturnType(MethodParameter returnType) {
+      return getReturnValueHandler(returnType) != null;
+   }
+
+   @Nullable
+   private HandlerMethodReturnValueHandler getReturnValueHandler(MethodParameter returnType) {
+      for (HandlerMethodReturnValueHandler handler : this.returnValueHandlers) {
+         if (handler.supportsReturnType(returnType)) {
+            return handler;
+         }
+      }
+      return null;
+   }
+
+   @Override
+   public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType,
+         ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
+
+      HandlerMethodReturnValueHandler handler = selectHandler(returnValue, returnType);
+      if (handler == null) {
+         throw new IllegalArgumentException("Unknown return value type: " + returnType.getParameterType().getName());
+      }
+      handler.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
+   }
+
+   ...
+
+}
+```
+
+<br>
+
+오버라이딩된 supportsReturnType 메소드의 경우에는 **리스트를 순회하여 처리 가능한 핸들러** 가 있을 경우에 true를 반환하게 하였으며, handleReturnValue의 경우에는 처리 가능한 핸들러를 찾아서 **해당 핸들러의 handleReturnValue 호출** 을 해주고 있다. 
+
+아주 적절하게 컴포지트 패턴을 적용해서 문제를 해결함을 확인할 수 있다.
+
+`ResponseEntity` 객체를 반환한 경우에는 컴포지트 객체가 갖는 HandlerMethodReturnValueHandler 구현체 중에서 `HttpEntityMethodProcessor` 가 사용된다. 
+
+HttpEntityMethodProcessor 내부에서는 Response를 set해주고, 응답 가능한 MediaType인지 검사한 후에 적절한 MessageConverter를 선택해 응답을 처리하고 결과를 반환한다.
+
+
+<br>
+
+
+## 2. Dispatcher Servlet 의 초기화 과정
+
+마지막으로 디스패처 서블릿의 초기화 과정 중 일부만 살펴보도록 하자.
+ 
+[ DispatcherServlet(디스패처 서블릿)의 초기화 과정 ]
+
+앞서 설명하였듯 **`Dispatcher Servlet`** 은 J2EE 스펙의 **HttpServlet 클래스를 확장한 서블릿 기반의 기술** 이다. 
+
+그러므로 Dispatcher Servlet 역시 **일반적인 서블릿의 라이프사이클을 따르게 되는데** 서블릿의 라이프사이클은 다음과 같다.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/05f8c132-165e-4638-8c45-f2fe0e468957)
+
++ **초기화** : 요청이 들어오면 servlet 이 web container 에 등록되어 있는지 확인하고, 없으면 초기화를 진행함
+
++ **요청 처리** : 요청이 들어오면 각각의 HTTP method 에 맞게 요청을 처리함
+
++ **소멸** : Web Container 가 Servlet 에 종료 요청을 하여 종료시에 처리해야 하는 작업들을 처리함
+
+<br>
+
+클라이언트로부터 요청이 오면 Web Container 는 먼저 servlet 이 초기화 되었는지를 확인하고, 초기화되지 않았다면 **`init()`** 메소드를 호출해 초기화를 진행한다. 
+
+init() 메소드는 **첫 요청이 왔을 때 한번만** 실행되기 때문에 **`servlet 의 쓰레드에서 공통적으로 필요로 하는 작업들이 진행`** 된다. 
+
+그 작업들 중에는 Dispatcher Servlet 이 controller 로 요청을 위임하고 받은 결과를 처리하기 위한 도구들을 준비하는 과정이 있다. 
+
+Dispatcher Servlet 은 요청을 처리하기 위해 다음과 같은 도구들을 필요로 한다.
+
++ Multipart 파일 업로드를 위한 MultipartResolver
+
++ Locale을 결정하기 위한 LocaleResolver
+
++ 요청을 처리할 컨트롤러를 찾기 위한 HandlerMapping
+
++ 요청을 컨트롤러로 위임하기 위한 HandlerAdapter
+
++ 뷰를 반환하기 위한 ViewResolver
+
++ 기타 등등
+
+<br>
+
+**Spring 은 Lazy-Init 전략** 을 사용해 애플리케이션을 빠르게 구동하도록 하고 있어서, `첫 요청이 와서 servlet 초기화가 진행될 때` ***Application Context 로부터 해당 빈을 찾아서 설정(Set)*** 해준다. 
+
+*그리고 이는 spring 의 첫 요청을 느리게 만드는 원인* 이다. 
+
+Dispatcher Servlet 의 초기화 화 로직은 다음과 같이 구현되어 있다. (부모 클래스 부분은 생략한 것이다.)
+
+
+```java
+@Override
+protected void onRefresh(ApplicationContext context) {
+    initStrategies(context);
+}
+
+protected void initStrategies(ApplicationContext context) {
+    initMultipartResolver(context);
+    initLocaleResolver(context);
+    initThemeResolver(context);
+    initHandlerMappings(context);
+    initHandlerAdapters(context);
+    initHandlerExceptionResolvers(context);
+    initRequestToViewNameTranslator(context);
+    initViewResolvers(context);
+    initFlashMapManager(context);
+}
+```
+
+<br>
+
+위의 코드에서 도구들을 초기화하는 메소드 이름이 `initStrategies` 인 이유는 **전략 패턴** 이 적용되었기 때문이다. 
+
+대표적으로 **뷰를 반환하기 위한 도구인 ViewResolver** 를 중심으로 살펴보도록 하자. 
+
+**ViewResolver** 에는 전략 패턴이 적용되었으므로 **`인터페이스`** 이다. 
+
+ViewResolver 외에 다른 모든 도구들도 전략 패턴을 적용하므로 인터페이스를 갖고 있고, **인터페이스 타입** 으로 선언되어 있다.
+
+<br>
+
+```java
+public interface ViewResolver {
+
+    @Nullable
+    View resolveViewName(String viewName, Locale locale) throws Exception;
+
+}
+```
+
+Spring 은 기본적으로 `ContentNegotiatingViewResolver, BeanNameViewResolver, InternalResourceViewResolver` 를 **Bean 으로 등록** 해둔다. 
+
+그리고 개발자가 추가한 Thymeleaf나 Mustache와 같은 **템플릿 엔진** 을 위한 ViewResolver도 추가될 수 있다. (Spring Boot 에서는 해당 의존성을 추가하면 자동으로 등록된다.) 
+
+결국 실제로 어떤 구현체가 사용될지는 애플리케이션 실행 후에야 알 수 있다. 
+그래서 spring은 유연하게 도구들을 사용할 수 있도록 `전략 패턴` 을 적용하였으며 **여러 ViewResolver가 동작 가능하도록 List로 ViewResolver** 를 가지고 있다.
+ 
+그런데 spring 은 ViewResolver에 추가적으로 컴포지트 클래스인 ViewResolverComposite를 만들어 **`컴포지트 패턴`** 까지 적용하고 있는데, 그 이유는 **WebMvcConfigurer** 와 관련이 있다. 
+
+Spring 에서는 `Interceptor 나 CORS 처리` 등 **웹 기능을 확장하기 위해서 WebMvcConfigurer 인터페이스를 구현한 설정 클래스를 만들어준다.**
+
+그리고 여기서도 ViewResolver를 직접 등록해줄 수 있는데, `여기서 등록된 빈들은 CompositeViewResolver` 에 등록이 된다. 
+
+예를 들어 다음과 같은 설정 클래스를 추가했다고 하자.
+
+```java
+@Configuration
+public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        registry.viewResolver(new MyViewResolver());
+    }
+
+    static class MyViewResolver implements ViewResolver {
+        @Override
+        public View resolveViewName(String viewName, Locale locale) throws Exception {
+            return null;
+        }
+    }
+
+    @Bean
+    public MangKyuViewResolver mangKyuViewResolver() {
+        return new MangKyuViewResolver();
+    }
+
+    static class MangKyuViewResolver implements ViewResolver {
+        @Override
+        public View resolveViewName(String viewName, Locale locale) throws Exception {
+            return null;
+        }
+    }
+}
+```
+
+<br>
+
+MyViewResolver는 WebMvcConfigurer를 통해 등록되었으므로 ViewResolverComposite에 추가가 되고, MangKyuViewResolver는 직접 빈을 등록해준 것이므로 List 안에 등록이 된다. 
+
+최종적으로 **Dispatcher Servlet 의 List<ViewResolver>** 는 다음과 같이 구성 된다.
+
++ ContentNegotiatingViewResolver
+
++ BeanNameViewResolver
+
++ MangKyuViewResolver
+
++ ViewResolverComposite
+
+  + MyViewResolver
+
++ InternalResourceViewResolver
+
+<br>
+
+
+첫 요청이 느린 문제를 해결하는 방법은 스프링 애플리케이션이 실행된 후에 아무런 API를 호출해 서블릿 초기화를 시키면 된다. 존재하지 않는 URI라 할지라도 디스패처 서블릿은 첫 요청을 받아들이기 위해 초기화 과정을 진행한다.
+
+
+<br>
 
 # Spring 에서 API에 매핑되는 컨트롤러와 메소드 조회하여 직접 호출하기(HandlerMapping과 HandlerMethod)
 
