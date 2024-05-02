@@ -168,7 +168,9 @@ REQUIRED 는 spring 이 제공하는 기본적인(DEFAULT) 전파 속성으로, 
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/e3fd8e76-6f7e-4c49-9cf0-f538c901f7c1)
 
+
 <br>
+
 
 여기서 `참여한다` 는 것은 **외부 트랜잭션을 그대로 이어간다** 는 뜻이며, **`외부 트랜잭션의 범위`** 가 **내부까지 확장** 되는 것이다.
 
@@ -183,6 +185,7 @@ Rollback 역시 비슷한데, `내부 트랜잭션` 에서 rollback 을 하여�
 `물리 트랜잭션` 이 rollback 될 때 실제 rollback 이 처리되는데, `논리 트랜잭션들 중에서 1개라도 rollback` 되었다면 **rollback** 된다. 
 
 **`물리 트랜잭션`** 은 **실제 Connection 에 rollback / commit 을 호출** 하는 것이므로 **해당 트랜잭션이 끝나는 것이다.**
+
 
 <br>
 
@@ -213,7 +216,9 @@ REQUIRES_NEW 는 `외부 트랜잭션과 내부 트랜잭션` 을 **완전히 �
 
 REQUIRED와 REQUIRES_NEW를 이해했다면 나머지는 응용이므로, 간단히 어떻게 동작하는지 살펴보도록 하자.
 
+
 <br>
+
 
 ### [ 다양한 트랜잭션 전파 속성 ]
 
@@ -306,6 +311,7 @@ REQUIRED 는 디폴트 속성으로써 모든 Transaction Manager 가 지원하�
 
 <br>
 
+
 ### NESTED
 
 + 의미: **중첩(자식)** 트랜잭션 을 생성함
@@ -313,6 +319,9 @@ REQUIRED 는 디폴트 속성으로써 모든 Transaction Manager 가 지원하�
 + 기존 트랜잭션 없음: 새로운 트랜잭션을 생성함
 
 + 기존 트랜잭션이 있음: **중첩** 트랜잭션을 만듬
+
+
+<br>
 
 
 **NESTED** 는 **이미 진행중인 트랜잭션에 중첩(자식) 트랜잭션을 만드는 것** 으로, `독립적인 트랜잭션을 만드는 REQUIRES_NEW` 와 **다르다.** 
