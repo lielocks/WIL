@@ -8,7 +8,9 @@
 
 트랜잭션이 끝나는 방법에는 **모든 작업을 확정짓는 `커밋(commit)`** 과 **모든 작업을 무효화하는 `롤백(rollback)`** 이 있다.
  
+
 <br>
+
 
 ### 트랜잭션의 시작
 
@@ -20,7 +22,7 @@
 
 그러므로 *JDBC에서 트랜잭션을 시작* 하려면 **`자동 커밋 옵션을 false`** 로 해주어야 하는데, 그러면 새로운 트랜잭션이 시작되게 만들 수 있다.
 
-```
+```java
 public void executeQuery() throws SQLException {
     Connection connection = dataSource.getConnection();
     connection.setAutoCommit(false);
@@ -32,9 +34,11 @@ public void executeQuery() throws SQLException {
 
 <br>
 
+
 스프링을 이용하면 **내부적으로 커넥션을 갖고 있는 추상화된 `트랜잭션 매니저`** 를 이용하게 된다. 
 
-이 때에는 다음과 같이 트랜잭션을 시작하게 되고, 자동 커밋 옵션을 변경하는 등의 작업은 트랜잭션 매니저 내부에서 진행된다.
+이 때에는 다음과 같이 트랜잭션을 시작하게 되고, 자동 커밋 옵션을 변경하는 등의 작업은 Transaction Manager 내부에서 진행된다.
+
 
 ```java
 public void executeQuery() throws SQLException {
@@ -46,6 +50,7 @@ public void executeQuery() throws SQLException {
 ```
 
 <br>
+
 
 ### 트랜잭션의 종료
 
@@ -109,7 +114,9 @@ Spring 이 제공하는 **`선언적 트랜잭션(트랜잭션 어노테이션, 
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/8f67becf-b481-4ec1-bdc0-c3fba166c970)
 
+
 <br>
+
 
 이 경우에는 `2개의 트랜잭션 범위가 존재` 하기 때문에 **개별 논리 트랜잭션이 존재** 하지만, 실제로는 **1개의 물리 트랜잭션이 사용된다.** 
 
@@ -122,6 +129,7 @@ Spring 이 제공하는 **`선언적 트랜잭션(트랜잭션 어노테이션, 
 + 논리 트랜잭션 : Spring 이 Transaction Manager 를 통해 트랜잭션을 처리하는 단위
 
 <br>
+
 
 *기존의 트랜잭션이 진행중일 때* `또 다른 트랜잭션이 사용` 되면 복잡한 상황이 발생한다. 
 
