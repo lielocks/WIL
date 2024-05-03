@@ -1693,3 +1693,394 @@ Method 객체는 controller 의 메서드이므로 **`invoke`** 하면 **control
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/f949364e-7975-47aa-891c-71dafd504284)
 
+
+<br>
+
+
+## JIT 컴파일러의 웜업(Warm - Up)
+
+### [자바 언어의 동작 방식]
+
+첫 요청이 오래 걸리는 주된 이유는 JVM 의 JIT 컴파일러와 연관이 있다.
+
+그러므로 우리는 java 언어의 동작 방식을 살펴보아야 하는데, 그 전에 C, C++, GoLang, Rust 등과 같은 컴파일 언어의 동작 과정부터 살펴보도록 하자.
+
+컴파일 언어는 컴파일 과정에서 바로 기계어를 만들어낸다.
+
+그리고 컴파일시에 코드 최적화까지 진행하여 처리 성능이 상당히 뛰어나다.
+
+대신 생성된 기계어가 빌드 환경(CPU 아키텍처)에 종속적이라서, 플랫폼이 바뀐다면 다시 빌드해야 하는 문제가 있다.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/801d3811-ee8a-4124-8c12-c54be70d9c00)
+
+
+<br>
+
+
+하지만 자바는 이러한 **`플랫폼 종속적인 문제`** 를 해결하고자 **JVM** 을 도입하였고, 그래서 동작 과정이 조금 다르다.
+
+자바는 먼저 작성된 Source Code 를 Byte Code 로 compile 하는데, Byte Code 는 주로 JAR 또는 WAR로 아카이브하여 활용하게 된다. 
+
+JVM은 아카이빙된 파일을 구동하는데, **`실시간으로 Byte Code 를 기계어로 번역하면 CPU가 해당 기계어를 처리한다.`** 
+
+이러한 구조 덕분에 Java는 플랫폼에 종속되지 않게 되었지만, 코드를 실행할 때 **Byte Code 를 기계어로 번역하는 작업** 때문에 성능이 느려졌다. 
+
+그래서 이러한 문제를 해결하고자 JIT 컴파일러를 도입하여 사용하고 있다.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/6019592b-cb2d-407a-8af0-cdb9266578c6)
+
+
+<br>
+
+
+### [ JIT 컴파일러(Just In Time Compiler)의 웜업(Warm-Up) 문제 ]
+
+*자바는 성능 문제를 해결* 하고자 **적시에 기계어를 만들어낸다** 는 의미의 **`JIT(Just In Time) 컴파일러`** 를 도입하여 사용하고 있다. 
+
+JIT 컴파일러는 핫스팟이라고도 불리는데, JDK 1.3부터 반영되어 있다. 
+
+**`JIT 컴파일러`** 는 **바이트 코드를 기계어로 번역하는 과정에서 캐시를 활용** 한다. 
+
+그래서 **`이미 번역된 기계어를 재사용`** 할 수 있도록 하며, 그에 더해 런타임 환경에 맞춰 코드도 최적화함으로써 성능을 향상시킨다.
+
+하지만 문제는 `애플리케이션이 시작될 때에는` **캐싱된 기계어가 없다는 것** 이고, 그래서 ***스프링에서 첫 요청이 오래걸리는 것*** 이다. 
+
+만약 *요청이 많은 서비스에서 캐싱된 기계어가 없는 상태* 라면 `배포 직후에는 응답 지연이 발생` 하여 문제가 발생할 수 있다.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/9599f55b-1008-4f4e-8058-0771635701c7)
+
+그래서 **애플리케이션 시작 후에 강제로 로직을 호출하여 기계어를 캐싱해두는 작업** 이 필요한데, 이를 **`warm-up`** 이라고 한다. 
+
+트래픽이 많은 서비스라면 warm-up 작업은 반드시 고려되어야 한다. 
+
+참고로 위에서 설명한 서블릿 초기화 보다는 **JIT 컴파일러 부분이 훨씬 성능에 크게 영향** 을 미친다.
+
+
+<br>
+
+
+## SpringBoot 실행 후에 초기화 코드를 넣는 3가지 방법과 이벤트 리스너(CommandLineRunner, ApplicationRunner, EventListener)
+
+애플리케이션이 실행된 후에 초기화 등의 이유로 1회 특정한 코드의 실행을 필요로 할 수 있다. 스프링 부트에는 이러한 문제를 해결하기 위해 다음과 같은 3가지 방식을 사용할 수 있다.
+ 
+
+### [커맨드라인 파라미터를 위한 CommandLineRunner]
+
+**CommandLineRunner 를 구현하는 클래스 생성**
+
+CommandLineRunner는 스프링 부트 1.0에 추가된 **함수형 인터페이스로써 스프링 애플리케이션이 구동된 후에 실행되어야 하는 빈을 정의** 하기 위해 사용된다. 
+
+CommandLineRunner는 파라미터로 String 타입의 가변 인자를 받고 있으며 인터페이스 이름 그대로 **`커맨드 라인으로 받은 스트링 타입의 인자를 파라미터로 받아서 사용`** 하기 위해 만들어졌다. 
+
+CommandLineRunner는 이를 구현하는 클래스를 정의하고 빈이 등록하면 애플리케이션이 구동된 후에 자동으로 run 메소드가 실행된다.
+
+
+```java
+@Component
+class MangKyuCommandLineRunner implements CommandLineRunner {
+
+    @Override
+    public void run(String... args) {
+        System.out.println("MangKyu");
+    }
+    
+}
+```
+
+<br>
+
+
+**CommandLineRunner를 람다식으로 구현**
+
+우리가 필요로 하는 작업은 `애플리케이션 실행 후에 1회 초기화 작업` 인데, 위와 같이 *클래스로 만드는 것은 무거우며 번거롭다.* 
+
+CommandLineRunner는 함수형 인터페이스이므로 다음과 같이 **main 클래스에 @Bean과 함께 람다식으로 구현하여 간소화** 할 수 있다.
+
+```java
+@SpringBootApplication
+public class TestingApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(TestingApplication.class, args);
+    }
+
+    @Bean
+    public CommandLineRunner commandLineRunner() {
+        return args -> System.out.println("MangKyu");
+    }
+}
+```
+
+<br>
+
+ 
+@Bean은 @Configuration이 있는 클래스 안에서만 동작하는데, **@SpringBootApplication** 이 갖고 있는 `@SpringBootConfiguration 안에 @Configuration이 존재` 하므로 **메인 클래스 역시 빈으로 등록이 되어 가능** 한 것이다.
+
+
+<br>
+
+
+### [ 다양한 파라미터를 위한 ApplicationRunner ]
+
+**ApplicationRunner** 역시 마찬가지로 함수형 인터페이스로써 **`스프링 애플리케이션이 구동된 후에 실행되어야 하는 빈을 정의`** 하기 위한 인터페이스이다. 
+
+목적 자체는 동일하지만 ApplicationRunner는 CommandLineRunner와 달리 **다양한 종류의 파라미터** 를 받아서 실행하는 경우에 사용할 수 있다. 
+
+CommandLineRunner는 스프링 부트 1.0에 추가된 반면에 ApplicationRunner는 스프링 부트 2.0에 추가되었다. 
+
+ApplicationRunner도 비슷하게 이 인터페이스를 구현하는 클래스를 등록할수도 있고 람다식으로 직접 사용할 수도 있다.
+
+
+```java
+@SpringBootApplication
+public class TestingApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(TestingApplication.class, args);
+    }
+
+    @Bean
+    public ApplicationRunner applicationRunner() {
+        return args -> System.out.println("MangKyu");
+    }
+}
+```
+
+<br>
+
+
+### [ 이벤트 수신을 위한 EventListener ]
+
+**이벤트 리스너 등록 및 이벤트 발행**
+
+Spring 은 초기부터 `Application Context 내부` 에서 **특정 타입의 event 를 던지고, 이를 listen 하는 Listener 에게 전달해주는 메커니즘** 을 사용하고 있었다. 
+
+그리고 우리가 이를 애플리케이션 레벨에서 이용할 수도 있는데, **특정 타입의 이벤트를 수신하기 위해서는 해당 Listener 를 구현해 bean 으로 등록** 해두면 된다. 
+
+event 를 수신하는 Listener 를 등록하고 event 를 발행하는 코드는 다음과 같다.
+
+
+```java
+@SpringBootApplication
+public class TestingApplication {
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(TestingApplication.class, args);
+
+        context.addApplicationListener(new ApplicationListener<ApplicationEvent>() {
+            @Override
+            public void onApplicationEvent(ApplicationEvent event) {
+                System.out.println("MangKyu");
+            }
+        });
+
+        context.publishEvent(new ApplicationEvent(context) {
+
+        });
+    }
+}
+```
+
+<br>
+
+
+ApplicationEvent의 생정자는 Object 타입을 받고 있는데, 이벤트를 발행하는 객체를 넣는 용도로 존재한다. 
+
+위의 코드에서는 **ApplicationContext 객체** 를 넣어주었다. 
+
+ApplicationListener는 역시 함수형 인터페이스이므로 람다식으로 간소화할 수 있다.
+
+
+```java
+@SpringBootApplication
+public class TestingApplication {
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(TestingApplication.class, args);
+
+        context.addApplicationListener(event -> System.out.println("MangKyu"));
+
+        context.publishEvent(new ApplicationEvent(context) {
+
+        });
+    }
+}
+```
+
+<br>
+
+
+**@EventListener 를 사용한 이벤트 리스너 등록**
+
+하지만 위와 같이 이벤트 리스너를 직접 구현하는 방식은 상당히 번거롭다. 
+
+그래서 스프링 4.2부터는 @EventListener 어노테이션이 추가되었는데, **@EventListener** 를 **`spring bean 안에 구현해두면 Listener가 동작`** 하게 된다. 
+
+*spring 은 애플리케이션이 준비되었을 때* **ApplicationReadyEvent 타입의 이벤트를 발행** 하므로, 애플리케이션이 준비되었을 때 어떤 코드를 실행하기 위해서는 다음과 같이 이용할 수 있다.
+
+
+```java
+@SpringBootApplication
+public class TestingApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(TestingApplication.class, args);
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void init() {
+        System.out.println("MangKyu");
+    }
+    
+    @EventListener
+    public void init(ApplicationReadyEvent event) {
+        System.out.println("MangKyu");
+    }
+}
+```
+
+<br>
+
+
+앞서 @EventListener 는 spring bean 안에 넣어야 한다고 했는데, 앞서 살펴보았듯 **main class 역시 spring bean 으로 등록되므로 main class 안에서 @EventListener 사용이 가능** 하다. 
+
+또한 @EventListener는 여러 타입의 메세지를 받을 수 있는데, 특정 타입의 메세지를 받기 위해서는 @EventListener 어노테이션에 이벤트 타입을 넣어주면 되며, 
+
+만약 해당 타입이 파라미터로 필요하다면 어노테이션에 적어줄 필요 없이 파라미터로만 명시해주어도 된다.
+
+spring 은 `ApplicationReadyEvent 타입의 이벤트를 1회만 발행` 하는데, 위의 코드에서는 **수신하는 Listener 가 2개가 존재** 한다. 
+
+**`Event Listener`** 는 기본적으로 **Multi Casting 관계이므로 동일한 타입의 여러 listener 가 등록되었다면 모든 listener 가 이벤트를 받게 된다.**
+
+
+<br>
+
+
+**Custom Event 와 Custom Event Listener 의 구현**
+
+ApplicationListener 의 제네릭 타입으로 **ApplicationEvent 하위의 이벤트 클래스를 주면 해당 타입의 event 만을 받도록** 구현할 수 있다. 
+
+또한 직접 `Listener 어노테이션` 을 구현할 수도 있는데, 이를 코드로 작성하면 다음과 같다.
+
+
+```java
+@SpringBootApplication
+public class TestingApplication {
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(TestingApplication.class, args);
+        context.publishEvent(new MangKyuEvent(context, "MangKyuEvent"));
+    }
+
+    static class MangKyuEvent extends ApplicationEvent {
+
+        private final String message;
+
+        public MangKyuEvent(Object source, String message) {
+            super(source);
+            this.message = message;
+        }
+    }
+
+    @Target(ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @EventListener
+    @interface MangKyuListener {
+
+    }
+
+    @MangKyuListener
+    public void mangKyuEvent(MangKyuEvent mangKyuEvent) {
+        System.out.println(mangKyuEvent.message);
+    }
+
+}
+```
+
+<br>
+
+
+이러한 이벤트를 발행하고 listener 를 통해 수신하는 개발 방식은 **bean 들 사이의 관계를 끊어 느슨하게 함으로써 결합도를 낮출 수 있다.** 
+
+또한 이를 중심으로 개발하는 설계 등을 **`이벤트 주도 설계(Event Driven Architecture)`** 등이라고도 한다.
+
+spring boot 에서는 애플리케이션의 시점에 따라 이벤트를 발행하기 위해 ApplicationEvent를 상속받는 SpringApplicationEvent 추상클래스를 구현해두었고, 
+다음과 같은 구현체들 역시 만들어두었다. 
+
+아래의 내용들은 공식 문서에서 참고한 내용들이다.
+
++ ApplicationStartingEvent
+
+  + 애플리케이션이 실행되고나서 가능한 빠른 시점에 발행됨
+  
+  + Environment와 ApplicationContext는 준비되지 않았지만 listener 들은 등록이 되었음
+  
+  + 이벤트 발행 source 로 SpringApplication 이 넘어오는데, 이후 내부 상태가 바뀌므로 내부 상태의 변경은 최소화해야 함
+
+
+<br>
+
+
++ ApplicationContextInitializedEvent
+
+  + 애플리케이션이 시작되고 애플리케이션 컨텍스트가 준비되었으며 initializer가 호출되었음
+  
+  + 하지만 빈 정보들은 불러와지기 전에 발행됨
+
+
+<br>
+
+
++ ApplicationEnvironmentPreparedEvent
+
+  + 애플리케이션이 실행되고 Environment가 준비되었을 때 발행됨
+
+
+<br>
+
+
++ ApplicationPreparedEvent
+
+  + 애플리케이션이 시작되고 애플리케이션 컨텍스트가 완전히 준비되었지만 refresh 되기 전에 발행됨
+
+  + 빈 정보들은 불러와졌으며 Environment 역시 준비가 된 상태임
+
+
+<br>
+
+
++ ApplicationStartedEvent
+
+  + 애플리케이션 컨텍스트가 refesh 되고나서 발행됨
+  
+  + ApplicationRunner와 CommandLineRunner가 실행되기 전의 시점임
+
+
+<br>
+
+
++ ApplicationReadyEvent
+
+  + 애플리케이션이 요청을 받아서 처리할 준비가 되었을 때 발행됨
+  
+  + 이벤트 발행 source로 SpringApplication이 넘어오는데, 이후에 초기화 스텝이 진행되므로 내부 변경은 최소화해야 함
+
+
+<br>
+
+
++ ApplicationFailedEvent
+
+  + 애플리케이션이 실행에 실패했을 때 발행됨
+
+
+<br>
+
+
+위의 3가지 중에서 편한 방법을 이용하면 애플리케이션 실행 시에 warm-up을 시킴으로써 첫 요청이 느린 문제를 해결할 수 있다. 
+
+물론 EventListener 는 비지니스 로직에서 불필요하게 연관관계가 복잡해지는 문제들을 해결하기 위해서도 사용할 수 있다. 
+
+이러한 경우에 만약 트랜잭션과 연관된 작업이라면 @TransactionalEventListener를 사용해주면 된다.
+ 
+
