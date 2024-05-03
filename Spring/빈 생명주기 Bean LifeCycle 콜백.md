@@ -105,13 +105,14 @@ Spring 의 **`IoC 컨테이너`** 는 **Bean 객체들을 책임지고 의존성
 즉, 조건에 따라 실행될 수도 실행되지 않을 수도 있는 개념이다.
 
 보통 프로젝트를 하다보면 `DB연결, 네트워크 소켓 연결` 등과 같이 시작 시점에 미리 연결한 뒤 어플리케이션 종료시점에 연결을 종료해야 하는 경우 **객체의 초기화 및 종료 작업** 이 필요할 것이다.
-(Ex. Connection Poll 의 connect & disconnect)
+(Ex. Connection Pool 의 connect & disconnect)
 
 Spring Bean 도 위와 같은 원리로 **초기화 작업** 과 **종료 작업** 이 나눠서 진행된다.
 
 간단히 말해서 **`객체 생성 -> 의존관계 주입`** 이라는 Life Cycle 을 가진다.
 
 즉, Spring Bean 은 **의존관계 주입이 다 끝난 다음에야** 필요한 데이터를 사용할 수 있는 준비가 완료된다.
+
 
 <br>
 
@@ -122,11 +123,11 @@ Spring Bean 도 위와 같은 원리로 **초기화 작업** 과 **종료 작업
 
 가장 처음에는 Spring IoC 컨테이너가 만들어지는 과정이 일어난다.
 
-위의 그림은 SpringBoot 에서 Component-Scan 으로 Bean 등록을 시작하는 과정을 그림으로 표현한 것이다.
+위의 그림은 SpringBoot 에서 Component-Scan 으로 `Bean 등록을 시작` 하는 과정을 그림으로 표현한 것이다.
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/093ad5a8-37b3-4fdb-b942-2b1600dd1730)
 
-위와 같이 @Configuration 방법을 통해 Bean 으로 등록할 수 있는 어노테이션들과 설정 파일들을 읽어 IoC 컨테이너 안에 Bean 으로 등록시킨다.
+위와 같이 **`@Configuration`** 방법을 통해 Bean 으로 등록할 수 있는 어노테이션들과 설정 파일들을 읽어 IoC 컨테이너 안에 Bean 으로 등록시킨다.
 
 <br>
 
