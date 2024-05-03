@@ -2009,7 +2009,7 @@ spring boot 에서는 애플리케이션의 시점에 따라 이벤트를 발행
 
 아래의 내용들은 공식 문서에서 참고한 내용들이다.
 
-+ ApplicationStartingEvent
++ **ApplicationStartingEvent**
 
   + 애플리케이션이 실행되고나서 가능한 빠른 시점에 발행됨
   
@@ -2021,17 +2021,17 @@ spring boot 에서는 애플리케이션의 시점에 따라 이벤트를 발행
 <br>
 
 
-+ ApplicationContextInitializedEvent
++ **ApplicationContextInitializedEvent**
 
-  + 애플리케이션이 시작되고 애플리케이션 컨텍스트가 준비되었으며 initializer가 호출되었음
+  + 애플리케이션이 시작되고 Application Context 가 준비되었으며 initializer가 호출되었음
   
-  + 하지만 빈 정보들은 불러와지기 전에 발행됨
+  + 하지만 bean 정보들은 불러와지기 전에 발행됨
 
 
 <br>
 
 
-+ ApplicationEnvironmentPreparedEvent
++ **ApplicationEnvironmentPreparedEvent**
 
   + 애플리케이션이 실행되고 Environment가 준비되었을 때 발행됨
 
@@ -2039,9 +2039,9 @@ spring boot 에서는 애플리케이션의 시점에 따라 이벤트를 발행
 <br>
 
 
-+ ApplicationPreparedEvent
++ **ApplicationPreparedEvent**
 
-  + 애플리케이션이 시작되고 애플리케이션 컨텍스트가 완전히 준비되었지만 refresh 되기 전에 발행됨
+  + 애플리케이션이 시작되고 Application Context 가 완전히 준비되었지만 refresh 되기 전에 발행됨
 
   + 빈 정보들은 불러와졌으며 Environment 역시 준비가 된 상태임
 
@@ -2049,27 +2049,27 @@ spring boot 에서는 애플리케이션의 시점에 따라 이벤트를 발행
 <br>
 
 
-+ ApplicationStartedEvent
++ **ApplicationStartedEvent**
 
-  + 애플리케이션 컨텍스트가 refesh 되고나서 발행됨
+  + Applicatin Context 가 refresh 되고나서 발행됨
   
-  + ApplicationRunner와 CommandLineRunner가 실행되기 전의 시점임
+  + `ApplicationRunner와 CommandLineRunner가 실행되기 전` 의 시점임
 
 
 <br>
 
 
-+ ApplicationReadyEvent
++ **ApplicationReadyEvent**
 
   + 애플리케이션이 요청을 받아서 처리할 준비가 되었을 때 발행됨
   
-  + 이벤트 발행 source로 SpringApplication이 넘어오는데, 이후에 초기화 스텝이 진행되므로 내부 변경은 최소화해야 함
+  + 이벤트 발행 source 로 SpringApplication 이 넘어오는데, 이후에 초기화 스텝이 진행되므로 **내부 변경은 최소화** 해야 함
 
 
 <br>
 
 
-+ ApplicationFailedEvent
++ **ApplicationFailedEvent**
 
   + 애플리케이션이 실행에 실패했을 때 발행됨
 
@@ -2077,7 +2077,7 @@ spring boot 에서는 애플리케이션의 시점에 따라 이벤트를 발행
 <br>
 
 
-위의 3가지 중에서 편한 방법을 이용하면 애플리케이션 실행 시에 warm-up을 시킴으로써 첫 요청이 느린 문제를 해결할 수 있다. 
+위의 3가지 중에서 편한 방법을 이용하면 **애플리케이션 실행 시에 warm-up을 시킴으로써 첫 요청이 느린 문제를 해결** 할 수 있다. 
 
 물론 EventListener 는 비지니스 로직에서 불필요하게 연관관계가 복잡해지는 문제들을 해결하기 위해서도 사용할 수 있다. 
 
