@@ -20,7 +20,7 @@ Thread와 Runnable을 직접 사용하는 방식은 다음과 같은 한계점�
 <br>
 
 
-먼저 thraed 를 어떻게 만드는지는 애플리케이션 개발자의 관심과는 거리가 먼데, Thread와 Runnable를 통한 thread 의 생성과 실행은 *너무 저수준의 API* 를 필요로 한다. 
+먼저 thread 를 어떻게 만드는지는 애플리케이션 개발자의 관심과는 거리가 먼데, Thread와 Runnable를 통한 thread 의 생성과 실행은 *너무 저수준의 API* 를 필요로 한다. 
 
 그리고 thread 의 작업이 끝난 후 결과를 반환받는 것도 불가능하다. 
 
@@ -80,24 +80,25 @@ public interface Future<V> {
 
 <br>
 
-+ get
++ *get*
 
-  + 블로킹 방식으로 결과를 가져옴
+  + blocking 방식으로 결과를 가져옴
 
   + 타임아웃 설정 가능
 
 
-+ isDone, isCancelled
++ *isDone, isCancelled*
 
   + isDone은 작업의 완료 여부, isCancelled는 작업의 취소 여부를 반환함
 
   + 완료 여부를 boolean으로 반환
 
-+ cancel
++ *cancel*
 
   + 작업을 취소시키며, 취소 여부를 boolean으로 반환함
 
-  + cancle 후에 isDone()는 항상 true를 반환함
+  + cancel 후에 isDone()는 항상 true를 반환함
+
 
 <br>
 
@@ -114,8 +115,6 @@ cancle 은 작업이 이미 정상적으로 완료되어 취소할 수 없는 �
 아래의 코드는 3초가 걸리는 작업의 결과를 얻기 위해 get을 호출하고 있다. 
 
 get은 결과를 기다리는 블로킹 요청이므로 아래의 실행은 적어도 3초가 걸리며, 작업이 끝나고 isDone 이 true가 되면 아래의 실행은 종료된다. 
-
-그 외에도 다양한 예시 코드들을 작성해두었는데, 나머지는 깃허브에서 참고하도록 하자.
 
 
 ```java
