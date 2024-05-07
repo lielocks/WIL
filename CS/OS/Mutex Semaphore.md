@@ -5,7 +5,7 @@
 <br>
 
  
-### [ Mutex(뮤텍스) ]
+### [ Mutex(Mutual Exclusion_상호배제) ]
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/4312ba34-44fe-47d5-8557-5c9f788d1ac3)
 
