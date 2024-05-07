@@ -97,3 +97,15 @@ Mutex 는 **`Locking 메커니즘`** 으로 **lock 을 걸은 thread 만이** *c
 
 *Semaphore 의 count 를 1로 설정하면 mutex 처럼 활용* 할 수 있다.
 
++ *Mutex* 는 동기화 대상이 오직 1개일 때 사용하며, *Semaphore* 는 동기화 대상이 1개 이상일 때 사용합니다.
+
++ *Mutex* 는 자원을 소유할 수 있고 책임을 가지는 반면, *Semaphore* 는 **자원 소유가 불가** 합니다.
+
++ *Mutex* 는 상태가 0,1 뿐이므로 Lock 을 가질 수 없고 소유하고 있는 thread 만이 이 Mutex 를 해제할 수 있습니다.
+
+  반면 *Semaphore* 는 Semaphore 를 소유하지 않는 thread 가 Semaphore 를 해제할 수 있습니다.
+
++ *Semaphore* 는 **system 범위** 에 걸쳐 있고 파일 시스템 상의 파일로 존재합니다.
+
+  반면, *Mutex* 는 **process 의 범위** 를 가지며 process 종료될 때 자동으로 clean up 됩니다.
+
