@@ -2,6 +2,8 @@
 
 세마포어와 뮤텍스는 모두 동기화를 이용되는 도구이지만 차이가 있다. 자세한 내용은 아래와 같다.
 
+<br>
+
  
 ### [ Mutex(뮤텍스) ]
 
@@ -23,7 +25,10 @@ Critical Section
 signal (mutex);
 ```
 
-위의 수도 코드는 mutex 의 과정을 보여주고 있는데, lock 을 얻은 thread 만이 critical section 을 나갈 때 lock 을 해제해줄 수 있다.
+<br>
+
+
+위의 수도 코드는 mutex 의 과정을 보여주고 있는데, `lock 을 얻은 thread 만이` **critical section 을 나갈 때 lock 을 해제** 해줄 수 있다.
 
 이러한 이유는 ***mutex 가 1개의 lock 만을 갖는 Locking 메커니즘*** 이기 때문이다.
 
