@@ -28,6 +28,60 @@
 <br>
 
 
+> ***Stack*** 에 할당되는 변수들의 종류
+
+```java
+public class StackVariables {
+    public static void main(String[] args) {
+        // 지역 변수: Stack에 할당됨
+        int a = 10;
+        double b = 20.5;
+        boolean c = true;
+        char d = 'A';
+        String e = "Hello";
+        
+        // 메서드 호출
+        method();
+    }
+    
+    public static void method() {
+        // 메서드 내의 지역 변수: Stack에 할당됨
+        int x = 100;
+        String y = "World";
+    }
+}
+```
+
+> ***Heap*** 에 할당되는 변수들의 종류 
+
+```java
+public class HeapVariables {
+    // 인스턴스 변수: Heap에 할당됨
+    int[] array = new int[10];
+    String name = "John";
+    MyClass obj = new MyClass();
+    
+    public static void main(String[] args) {
+        // 객체 생성: Heap에 할당됨
+        HeapVariables hv = new HeapVariables();
+        
+        // 객체의 인스턴스 변수 접근
+        hv.array[0] = 5;
+        hv.name = "Alice";
+    }
+}
+
+class MyClass {
+    // 인스턴스 변수: Heap에 할당됨
+    int value;
+    double weight;
+}
+```
+
+
+<br>
+
+
 ### [원시 변수(Primitive Value)의 메모리 할당 ]
 
 Java에서 변수는 객체가 아닌 실제 값들인 int, double, float boolean 등과 같은 원시 값(Primitive Value)들이 존재한다. 
