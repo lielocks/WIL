@@ -22,6 +22,46 @@ Static 키워드를 통해 생성된 정적 멤버들은 Heap 영역이 아닌 *
 
 
 
+자바에서 static 키워드는 **`클래스 레벨` 의 변수나 메소드, 블록** 을 정의할 때 사용됩니다. 
+
+이는 *인스턴스 생성 없이도 접근 가능* 하며, **모든 인스턴스에서 공유** 됩니다. 
+
+static 변수는 프로그램이 시작할 때 메모리에 할당되고 프로그램이 종료될 때까지 유지됩니다.
+
+왜냐하면 static 멤버는 **클래스가 로드될 때 메모리의 Method 영역** 에 할당되기 때문입니다. 
+
+
+```java
+public class Employee {
+    public static int employeeCount = 0;
+
+    public Employee() {
+        employeeCount++;
+    }
+}
+```
+
+
+이 코드에서
+
+```
+employeeCount
+```
+
+는 모든
+
+```
+Employee
+```
+
+**인스턴스** 에 의해 공유되는 **static 변수** 입니다.
+
+
+
+<br>
+
+
+
 ### [ Static의 메모리 ]
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/185078c5-630b-45a2-8292-319e825321bb)
@@ -94,11 +134,11 @@ Java 에서 Static 변수는 *메모리에 한번 할당되어 프로그램이 �
 
 이해를 높이기 위해 코드를 추가하겠습니다.
 
-예를 들어, 세상 모든 사람의 이름이 'MangKyu'인 세상에 살고있다고 가정을 하겠습니다. 이럴때면 우리는 아래와 같이 객체를 만들 수 있습니다
+예를 들어, 세상 모든 사람의 이름이 'ari'인 세상에 살고있다고 가정을 하겠습니다. 이럴때면 우리는 아래와 같이 객체를 만들 수 있습니다
 
 ```java
 public class Person {
-    private String name = "MangKyu";
+    private String name = "ari";
 	    
 	public void printName() {
 	    System.out.println(this.name);
@@ -106,17 +146,17 @@ public class Person {
 }
 ```
 
-하지만 위와 같은 클래스를 통해 100명의 Person 객체를 생성하면, "MangKyu"라는 같은 값을 갖는 메모리가 100개나 중복해서 생성되게 됩니다. 
+하지만 위와 같은 클래스를 통해 100명의 Person 객체를 생성하면, "ari"라는 같은 값을 갖는 메모리가 100개나 중복해서 생성되게 됩니다. 
 
 이러한 경우에 **static** 을 사용하여 **여러 객체가 하나의 메모리를 참조** 하도록 하면 메모리 효율이 더욱 높아질 것입니다. 
 
-또한 "MangKyu" 라는 이름은 **`결코 변하지 않는 값이므로 final`** 키워드를 붙여주며, 일반적으로 Static 은 **`상수의 값을 갖는 경우가 많으므로 public`** 으로 선언을 하여 사용합니다. 
+또한 "ari" 라는 이름은 **`결코 변하지 않는 값이므로 final`** 키워드를 붙여주며, 일반적으로 Static 은 **`상수의 값을 갖는 경우가 많으므로 public`** 으로 선언을 하여 사용합니다. 
 
 이러한 이유로, 일반적으로 static 변수는 public 및 final과 함께 사용되어 `public static final` 로 활용 됩니다. 
 
 ```java
 public class Person {
-    public static final String name = "MangKyu";
+    public static final String name = "ari";
          
     public static void printName() {
         System.out.println(this.name);
@@ -184,8 +224,8 @@ Static Method 는 **객체의 생성 없이 호출이 가능** 하며, 객체에
 
 ```java
 public class Test {
-    private String name1 = "MangKyu";
-    private static String name2 = "MangKyu";
+    private String name1 = "ari";
+    private static String name2 = "ari";
  
     public static void printMax(int x, int y) {
         System.out.println(Math.max(x, y));
