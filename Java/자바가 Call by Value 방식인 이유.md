@@ -1,6 +1,6 @@
-### Call by Value / Call by Reference
+### [ Call by Value / Call by Reference ]
 
-+ **Call by Value (값에 의한 호출)**
++ *Call by Value (값에 의한 호출)*
 
   + `값을 복사` 하여 처리한다.
 
@@ -8,7 +8,7 @@
 
   + **실제 인수는 `다른` 메모리 위치**에 생성된다.
 
-+ **Call by Reference (참조에 의한 호출)**
++ *Call by Reference (참조에 의한 호출)*
 
   + `값의 주소를 참조` 하여 **직접 값** 에 영향을 준다.
 
@@ -16,12 +16,14 @@
 
   + **실제 인수는 `같은` 메모리 위치** 에 생성된다.
 
+
 <br>
 
 
 ### 자바의 Call by Value 동작 방식
 
 자바의 데이터 타입은 다음과 같이 크게 두 가지로 나누어진다.
+
 
 + **`원시 타입(primitive type)`**
 
@@ -31,7 +33,11 @@
 
   Class Type, Interface Type, Array Type, Enum Type, 기타 참조 타입(String 등)
 
-그래서 메소드 parameter 로 원시 타입을 전달하는 것과 참조 타입을 전달하는 것에는 동작 방식에 차이가 있다.
+
+<br>
+
+
+그래서 `메소드 parameter` 로 *원시 타입* 을 전달하는 것과 *참조 타입* 을 전달하는 것에는 동작 방식에 차이가 있다.
 
 <br>
 
