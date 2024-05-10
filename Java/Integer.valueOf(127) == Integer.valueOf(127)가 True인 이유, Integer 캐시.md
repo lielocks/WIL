@@ -63,7 +63,7 @@ void compareInteger() {
 
 대표적으로 **`Character, Integer, Float, Double, Boolean`** 등이 있다.
 
-Java 에서는 **compiler** 가 **원시 타입과 참조 타입을 서로 호환가능하도록88 도와준다. 
+Java 에서는 **compiler** 가 **원시 타입과 참조 타입을 서로 호환가능하도록** 도와준다. 
 
 예를 들어서 다음과 같이 `int` 값을 `Integer 라는 Wrapper 클래스` 에 담을 수 있는 것은 **compiler 가 Wrapper 클래스로 자동으로 감싸주기 때문이다.**
 
@@ -132,6 +132,11 @@ public static Integer valueOf(int i) {
 > 그래서 **해당 범위의 값을 비교하면 `같은 참조` 를 갖게 되므로 `true` 가 나온다.**
 >
 > ***해당 범위의 값은 매우 자주 사용되기 때문에 메모리를 절약하고자 캐싱을 해두고 있는 것이다.***
+
+
+<br>
+
+
 
 실제로 자바 Integer 클래스의 Inner Static Class 로 **IntegerCache** 라는 클래스가 선언되어 있음을 확인할 수 있다.
 
