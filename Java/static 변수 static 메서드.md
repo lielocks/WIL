@@ -216,9 +216,9 @@ public class Test {
 
 ### 1. Static 변수
 
-일반적으로 상수들만 모아서 사용하며 상수의 변수명은 대문자와 _를 조합하여 이름짓는다. 
+일반적으로 **상수** 들만 모아서 사용하며 상수의 변수명은 대문자와 _를 조합하여 이름짓는다. 
 
-또한 상속을 방지하기 위해 final class로 선언을 한다.
+또한 **상속을 방지** 하기 위해 final class로 선언을 한다.
 
 ```java
 public final class AppConstants {
@@ -231,7 +231,7 @@ public final class AppConstants {
 
 ### 2. Static 메소드
 
-마찬가지로 상속을 방지하기 위해 final class로 선언을 하고, 유틸 관련된 함수들을 모아둔다.
+마찬가지로 **상속을 방지** 하기 위해 final class로 선언을 하고, **util** 관련된 함수들을 모아둔다.
 
 ```java
 import java.text.SimpleDateFormat;
