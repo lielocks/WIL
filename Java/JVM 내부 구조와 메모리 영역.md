@@ -177,8 +177,11 @@ C언어 같은 경우 직접 개발자가 메모리를 해제해줘야 되지만
 JVM 이 동작하고 클래스가 로드될 때 적재돼서 **프로그램이 종료될 때까지 저장** 된다.
 
 >
-> 메서드 영역(Method Area) 은 Class Area 나 Static Area 로도 불리운다.
+> **메서드 영역(Method Area) 은 `Class Area` 나 `Static Area` 로도 불리운다.**
 >
+
+<br>
+
 
 모든 **Thread 가 공유** 하는 영역이라 다음과 같이 초기화 코드 정보들이 저장되게 된다.
 
@@ -187,6 +190,10 @@ JVM 이 동작하고 클래스가 로드될 때 적재돼서 **프로그램이 �
 + ***Method Info*** : 메소드 이름, return 타입, 함수 매개변수, 접근 제어자의 정보
 
 + ***Type Info*** : Class 인지 Interface 인지 여부 저장, Type의 속성, 이름 Super Class의 이름
+
+
+<br>
+
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/6e0cd71c-c088-4265-983b-c4ea26bf05a2)
 
