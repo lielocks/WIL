@@ -521,5 +521,8 @@ QUIC 의 스트림이 독립적으로 송수신함에 따라 이에 맞춰 개�
 + **HTTP/3** Binary over Multiplexed QUIC(UDP)
 
 
+<br>
 
-*< reference : https://yozm.wishket.com/magazine/detail/1686/ >
+
+
+*< reference : https://yozm.wishket.com/magazine/detail/1686/ >*
