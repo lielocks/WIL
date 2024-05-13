@@ -301,6 +301,10 @@ public static Object newProxyInstance(ClassLoader loader,
 
 **Proxy 클래스의 내부** 입니다. 
 
+
+<br>
+
+
 코드를 살펴보면 **ClassLoader 와 Interface 타입** 으로 **`Constructor`** 를 만들어주고 **InvocationHandler** 를 이용해서 **Proxy Instance를 생성해 반환** 하고 있습니다. 
 
 조금 더 디버깅을 해보면, **ProxyGenerator 클래스 내부에서 Proxy class 를 `바이트코드( .class file )` 로 직접 만드는 코드** 를 볼 수 있습니다.
