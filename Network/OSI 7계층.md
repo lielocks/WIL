@@ -459,7 +459,7 @@ TCP 하위계층인 IP 계층의 신뢰성 없는 서비스에 대해 다방면�
 
 ### [ 7계층 - 응용 계층(Application Layer) ] 
 
-![Uploading image.png…]()
+![image](https://github.com/lielocks/WIL/assets/107406265/c2b814d2-0525-418c-8ba7-0072ab34fbc8)
 
 
 **최종 목적지** 로서 `HTTP, FTP, SMTP, POP3, IMAP, Telnet` 등과 같은 프로토콜이 있다.
