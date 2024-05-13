@@ -18,6 +18,9 @@ OSI 7 계층은 네트워크에서 통신이 일어나는 과정을 7단계로 �
 Only the layer in which the problem exist will be modified. Other layers are left untouched.)
 
 
+<br>
+
+
 그럼 문제를 예로 들어보자
 
 ```
