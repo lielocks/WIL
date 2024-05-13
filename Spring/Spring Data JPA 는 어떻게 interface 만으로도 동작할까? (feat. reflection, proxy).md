@@ -145,15 +145,15 @@ public class ItemApp {
 <br>
 
 
-리플렉션 기술을 사용하면 **Class 나 Method 의 메타 정보를 동적으로 획득** 하고, **코드도 동적으로 호출** 할 수 있습니다. 
+Reflection 기술을 사용하면 **Class 나 Method 의 메타 정보를 동적으로 획득** 하고, **코드도 동적으로 호출** 할 수 있습니다. 
 
-심지어 **`private 접근 제어자`** 가 붙어있는 메서드에도 접근할 수 있습니다. 
+심지어 **`private 접근 제어자`** 가 붙어있는 Method 에도 접근할 수 있습니다. 
 
-이렇게 메타정보를 이용해서 클래스, 필드, 메서드 정보를 얻는다는 것은 **`정보를 동적으로 변경`** 할 수도 있게 됩니다. 
+이렇게 메타정보를 이용해서 *클래스, 필드, 메서드 정보를 얻는다는 것* 은 **`정보를 동적으로 변경`** 할 수도 있게 됩니다. 
 
 결과적으로 *동적인 객체 생성, 동적 메서드 호출 기능* 등을 사용 할 수 있는데 Spring 에서는 **`DI, Proxy` 등에서 Reflection 이 사용됩니다.** 
 
-이러한 특징을 기반으로 **`Dynamic Proxy`** 에서 **리플렉션을 어떻게 사용하는지** 알아보겠습니다.
+이러한 특징을 기반으로 **`Dynamic Proxy`** 에서 **Reflection 을 어떻게 사용하는지** 알아보겠습니다.
 
 
 <br>
@@ -214,11 +214,21 @@ public class RepositoryHandler implements InvocationHandler {
 
 제공되는 parameter 는 다음과 같습니다.
 
+
+<br>
+
+
+
 + **Object proxy** : proxy 자신
 
 + **Method method** : 호출한 method
 
 + **Object[] args** : 메서드를 호출할 때 전달한 인수
+
+
+<br>
+
+
 
 스프링에서 Dynamic Proxy 는 위와 같이 InvocationHandler 를 구현하여 사용할 수 있습니다. 
 
@@ -245,7 +255,7 @@ public class ReflectionTest {
 <br>
 
 
-**`Dynamic Proxy 동적 프록시`** 를 생성할 때는 **`클래스 로더 정보`** , **`인터페이스`** , 그리고 **`핸들러`** 를 넣어주면 됩니다. 
+**`Dynamic Proxy 동적 프록시`** 를 생성할 때는 **`ClassLoader 정보`** , **`Interface`** , 그리고 **`Handler`** 를 넣어주면 됩니다. 
 
 그러면 해당 Interface 를 기반으로 **동적 프록시를 생성** 하고 그 결과를 반환해줍니다.
 
@@ -257,15 +267,18 @@ public class ReflectionTest {
 
 > 18:47:12.038 [main] INFO com.example.reflection.RepositoryHandler - save() in proxy
 > 18:47:12.041 [main] INFO com.example.reflection.SimpleRepository - Save Item. itemId = ITEM22
+> 
 > 정상 수행된 것으로 보아 **`CustomRepository 타입의 객체`** 가 만들어지고 **`save() 메소드`** 가 정상 수행된 것을 확인할 수 있습니다.
 
 
 <br>
 
 
-그렇다면 실제 스프링에서는 프록시 객체가 어떻게 생성되는지 알아보도록 하겠습니다. (지금부터 나오는 모든 디버깅은 핵심 코드만 보기 위해 살짝 편집했습니다. 실제 코드와는 조금 다릅니다.)
+그렇다면 ***실제 spring 에서는 Proxy 객체가 어떻게 생성되는지*** 알아보도록 하겠습니다. (지금부터 나오는 모든 디버깅은 핵심 코드만 보기 위해 살짝 편집했습니다. 실제 코드와는 조금 다릅니다.)
+
 
 <br>
+
 
 ```java
 public static Object newProxyInstance(ClassLoader loader,
@@ -288,7 +301,7 @@ public static Object newProxyInstance(ClassLoader loader,
 
 **Proxy 클래스의 내부** 입니다. 
 
-코드를 살펴보면 **`클래스 로더`** 와 **`인터페이스 타입`** 으로 **`Constructor`** 를 만들어주고 **`InvocationHandler`** 를 이용해서 **Proxy Instance를 생성해 반환** 하고 있습니다. 
+코드를 살펴보면 **ClassLoader 와 Interface 타입** 으로 **`Constructor`** 를 만들어주고 **InvocationHandler** 를 이용해서 **Proxy Instance를 생성해 반환** 하고 있습니다. 
 
 조금 더 디버깅을 해보면, **ProxyGenerator 클래스 내부에서 Proxy class 를 `바이트코드( .class file )` 로 직접 만드는 코드** 를 볼 수 있습니다.
 
@@ -393,11 +406,12 @@ public <T> T getRepository(Class<T> repositoryInterface, RepositoryFragments fra
 }
 ```
 
-**'Create Proxy'** 부분을 보면 ProxyFactory() 를 통해 ProxyFactory를 만들고 target 설정, interface 설정을 하고 있습니다. 
+**'Create Proxy'** 부분을 보면 ProxyFactory() 를 통해 ProxyFactory 를 만들고 **target 설정, interface 설정** 을 하고 있습니다. 
 
 그리고 **`getProxy()`** 를 통해서 **repository 를 생성** 해줍니다. 
 
-( ProxyFactory 는 스프링이 내부적으로 Proxy 를 생성하는 부분을 추상화하여 간편하게 사용할 수 있도록 해주는 클래스입니다. ) 
+
+> ( **ProxyFactory** 는 **spring 이 내부적으로 Proxy 를 생성하는 부분을 추상화하여 간편하게 사용할 수 있도록 해주는 클래스** 입니다. ) 
 
 
 <br>
@@ -405,11 +419,11 @@ public <T> T getRepository(Class<T> repositoryInterface, RepositoryFragments fra
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/84fe0655-3243-4f92-ba5f-275208e408df)
 
-디버깅을 내용을 살펴보면 `interface` 는 **`MemberRepository`** , `target` 은 **`SimpleJpaRepository`** 인 것을 확인할 수 있습니다. 
+디버깅을 내용을 살펴보면 **`interface`** 는 **`MemberRepository`** , **`target`** 은 **`SimpleJpaRepository`** 인 것을 확인할 수 있습니다. 
 
-이러한 과정을 보면 스프링은 **MemberRepository를 구현하는 객체를 생성** 해주고 있었습니다. 
+이러한 과정을 보면 spring 은 **MemberRepository를 구현하는 객체를 생성** 해주고 있었습니다. 
 
-처음에 나왔던 save() 메소드는 target 인 SimpleJapRepository 에게 요청을 위임하고, 사용자가 만들었던 findAllByName() 메서드도 동적으로 만들어주고 있었습니다.
+처음에 나왔던 **`save() 메소드`** 는 **target 인 SimpleJapRepository 에게 요청을 위임하고, 사용자가 만들었던 findAllByName() 메서드도 동적으로 만들어주고 있었습니다.** 
 
 
 <br>
@@ -419,6 +433,6 @@ public <T> T getRepository(Class<T> repositoryInterface, RepositoryFragments fra
 
 이상으로, Spring Data JPA에서 interface 만으로도 코드가 정상 동작하는 이유에 대해서 알아보았습니다. 
 
-한 줄로 정리를 해보면 `스프링` 은 사용자가 정의한 **Repository 인터페이스를 구현** 하고 **SimpleJpaRepository를 target으로 포함하는 Proxy 를 동적으로 만들어준다!** 
+한 줄로 정리를 해보면 **`spring`** 은 **사용자가 정의한 Repository 인터페이스를 구현** 하고 **SimpleJpaRepository를 target으로 포함하는 Proxy 를 동적으로 만들어준다!** 
 
 또, 그 **Proxy를 Bean으로 등록해주고 연관관계 설정이 필요한 곳에 주입** 도 해준다!!라고 할 수 있겠습니다. 스프링 덕분에 정말 편하게 하는 것이 많네요 ㅎㅎ
