@@ -278,6 +278,9 @@ IP 헤더 및 데이터를 포함한 ( IP 패킷 전체의 길이를 바이트 �
 
 ## ARP (Address Reolution Protocol) MAC 주소와 IP 주소의 연결고리
 
+![image](https://github.com/lielocks/WIL/assets/107406265/d2cd2819-ac10-47e0-b1ef-29356e636ad9)
+
+
 ARP (Address Resolution Protocol - 주소 결정 프로토콜)
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/49e431f9-5883-4c02-ab0a-91863c70465d)
@@ -334,6 +337,7 @@ ARP Request Packet이 전달되기만 한다면 LAN이라고 보는 것이죠.
 <br>
 
 ### MAC 주소란 ?
+
 MAC 주소란 말을 자주 들어보셨을거라 생각합니다. 
 
 IP Address와 늘 함께 언급되는 주소이지요. 
