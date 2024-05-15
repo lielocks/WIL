@@ -54,7 +54,7 @@ User user = optionalUser.get();
 <br>
 
  
-Null-Safe하기 위해 Optional을 사용하였는데, 
+Null-Safe 하기 위해 Optional을 사용하였는데, 
 
 **값의 존재 여부를 판단하지 않고 접근** 한다면 NullPointerException는 피해도 `NoSuchElementException` 가 발생할 수 있다.
 
@@ -109,6 +109,10 @@ public void temp(Optional<User> optionalUser) {
 그런데 위와 같은 코드는 또 다시 NPE 를 유발할 수 있다. 
 
 왜냐하면 **optionalUser 객체 자체가 null** 일 수 있기 때문이다. 
+
+
+<br>
+
 
 그러면 우리는 이러한 문제를 해결하기 위해 다음과 같이 코드를 수정해야 한다.
 
