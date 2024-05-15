@@ -160,7 +160,7 @@ Optional 은 만들어진 의도가 상당히 명확한 만큼 목적에 맞게 
 
 ## 올바른 Optional 사용법 가이드
 
-### [ Optional 변수에 Null을 할당하지 말아라. ]
+### [ Optional 변수에 Null을 할당하지 말아라 ]
 
 Optional 은 컨테이너/박싱 클래스일 뿐이며, Optional 변수에 null을 할당하는 것은 Optional 변수 자체가 null인지 또 검사해야 하는 문제를 야기한다. 
 
