@@ -160,7 +160,7 @@ Optional 은 만들어진 의도가 상당히 명확한 만큼 목적에 맞게 
 
 ## 올바른 Optional 사용법 가이드
 
-### Optional 변수에 Null을 할당하지 말아라. 
+### [ Optional 변수에 Null을 할당하지 말아라. ]
 
 Optional 은 컨테이너/박싱 클래스일 뿐이며, Optional 변수에 null을 할당하는 것은 Optional 변수 자체가 null인지 또 검사해야 하는 문제를 야기한다. 
 
@@ -178,7 +178,7 @@ public Optional<Cart> fetchCart() {
 <br>
 
 
-### 값이 없을 때 Optional.orElseX()로 기본 값을 반환하라
+### [ 값이 없을 때 Optional.orElseX()로 기본 값을 반환하라 ]
 
 Optional의 장점 중 하나는 함수형 인터페이스를 통해 가독성좋고 유연한 코드를 작성할 수 있다는 것이다. 
 
@@ -226,7 +226,7 @@ public String findUserName(long id) {
 <br>
 
 
-### 단순히 값을 얻으려는 목적으로만 Optional을 사용하지 마라
+### [ 단순히 값을 얻으려는 목적으로만 Optional 을 사용하지 마라 ]
 
 단순히 값을 얻으려고 Optional을 사용하는 것은 Optional을 남용하는 대표적인 경우이다. 
 
@@ -254,7 +254,7 @@ public String findUserName(long id) {
 <br>
 
 
-### 생성자, 수정자, 메소드 파라미터 등으로 Optional 을 넘기지 마라
+### [ 생성자, 수정자, 메소드 파라미터 등으로 Optional 을 넘기지 마라 ]
 
 ***Optional 을 parameter 로 넘기는 것은 상당히 의미없는 행동이다.***
 
@@ -298,7 +298,7 @@ Brian Goetz 는 **Getter에 Optional을 얹어 반환하는 것을 두고 `남�
 <br>
 
 
-### Collection의 경우 Optional이 아닌 빈 Collection을 사용하라
+### [ Collection의 경우 Optional이 아닌 빈 Collection 을 사용하라 ]
 
 Collection 의 경우 굳이 Optional 로 감쌀 필요가 없다. 
 
@@ -363,7 +363,7 @@ public Map<String, String> getUserNameMap() {
 <br>
 
 
-### 반환 타입으로만 사용하라
+### [ 반환 타입으로만 사용하라 ]
 
 Optional 은 **반환 타입으로써 에러가 발생할 수 있는 경우에 결과 없음을 명확히 드러내기 위해** 만들어졌으며, 
 
@@ -373,9 +373,9 @@ Optional 은 **반환 타입으로써 에러가 발생할 수 있는 경우에 �
 
 언어를 만드는 사람의 입장에서는 **Null 을 반환하는 것보다 `값의 유무를 나타내는 객체`를 반환** 하는 것이 합리적일 것이다. 
 
-Java 언어 설계자들은 이러한 고민 끝에 Optional을 만든 것이다.
+Java 언어 설계자들은 이러한 고민 끝에 Optional 을 만든 것이다.
 
-그러므로 Optional이 설계된 목적에 맞게 *반환 타입으로만 사용*되어야 한다.
+그러므로 Optional이 설계된 목적에 맞게 *반환 타입으로만 사용* 되어야 한다.
 
 Optional을 잘못 사용하는 것은 비용은 증가시키는 반면에 코드 품질은 오히려 악화시킨다. 
 그러므로 위에서 정리한 규칙을 준수하며 올바른 방식으로 Optional을 사용하도록 하자 !
