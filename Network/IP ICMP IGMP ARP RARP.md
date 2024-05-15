@@ -99,9 +99,11 @@ DS 필드에는 서비스 품질 유형을 나타내는 DSCP(Differentiated Serv
 
 **TOS ( Type Of Service )**
 
-인터넷에 제공되는 QOS 기능을 위한 서비스 형식 필드 ( 요구되는 서비스 품질을 나타냄 )
+인터넷에 제공되는 QOS 기능을 위한 *서비스 형식 필드* ( 요구되는 서비스 품질을 나타냄 )
+
 
 </br>
+
 
 **Identification**
 
@@ -238,7 +240,7 @@ Header 를 2 byte 씩 무두 잘라 더하고, 발생한 올림 영역까지 더
 
 + **Traffic Class 또는 Priority (8 비트)**
   
-   + *IPv4 일때의 TOS 필드* 와 유사
+   + ***IPv4 일때의 TOS 필드*** 와 유사
     
       + IP packet 마다 서로 다른 서비스 요구사항을 구분하기 위함
     
