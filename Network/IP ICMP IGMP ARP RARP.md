@@ -320,7 +320,7 @@ Header 를 2 byte 씩 무두 잘라 더하고, 발생한 올림 영역까지 더
 <br>
 
 
-## ARP (Address Reolution Protocol) MAC 주소와 IP 주소의 연결고리
+## ARP (Address Reolution Protocol) : MAC 주소와 IP 주소의 연결고리
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/d2cd2819-ac10-47e0-b1ef-29356e636ad9)
 
