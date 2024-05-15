@@ -714,11 +714,11 @@ TCP/IP 계층에서의 ICMP가 어디에 속하는 지를 나타내는 그림입
 <br>
 
 
-   + **`메세지 2`**
+      + **`메세지 2`**
 
-     + ICMP TYPE 8 (ECHO REQUEST)
+         + ICMP TYPE 8 (ECHO REQUEST)
 
-     + ICMP TYPE 0 (ECHO REPLY) 같은 메세지에서 특정 값이 주어짐
+         + ICMP TYPE 0 (ECHO REPLY) 같은 메세지에서 특정 값이 주어짐
 
 
 <br>
