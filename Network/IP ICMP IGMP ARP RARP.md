@@ -706,19 +706,16 @@ TCP/IP 계층에서의 ICMP가 어디에 속하는 지를 나타내는 그림입
 
    + **`메세지 1`**
 
-     + ICMP TYPE 3 (DESTINATION UNREACHABLE)
+      + ICMP TYPE 3 (DESTINATION UNREACHABLE)
 
-     + ICMP TYPE 11 (TIME EXCEEDED) 등에서는 사용되지 않으므로 0이 채워짐
-
-
-<br>
+      + ICMP TYPE 11 (TIME EXCEEDED) 등에서는 사용되지 않으므로 0 이 채워짐
 
 
-      + **`메세지 2`**
+   + **`메세지 2`**
 
-         + ICMP TYPE 8 (ECHO REQUEST)
+      + ICMP TYPE 8 (ECHO REQUEST)
 
-         + ICMP TYPE 0 (ECHO REPLY) 같은 메세지에서 특정 값이 주어짐
+      + ICMP TYPE 0 (ECHO REPLY) 같은 메세지에서 특정 값이 주어짐
 
 
 <br>
