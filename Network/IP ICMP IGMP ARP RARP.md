@@ -3,6 +3,9 @@
 ![image](https://github.com/lielocks/WIL/assets/107406265/0e089b0e-b133-4fed-913b-37f18e0544bd)
 
 
+<br>
+
+
 ## IP란 ? (Internet Protocol)
 
 네트워크 상에서 컴퓨터는 다른 컴퓨터와 구별될 수 있도록 고유번호를 가진다.
