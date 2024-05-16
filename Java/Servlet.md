@@ -82,13 +82,13 @@ Servlet 을 한줄로 정의하자면 아래와 같습니다.
 <br>
 
 
-> **CGI (Common Gateway Interface) 란?**
->
+**CGI (Common Gateway Interface) 란?**
+
 > **`CGI`** 는 *특별한 라이브러리나 도구를 의미하는 것이 아니고,* 별도로 제작된 **`Web Server 와 program 간의 교환 방식`** 입니다.
 >
 > **`CGI 방식`** 은 *어떠한 프로그래밍 언어로도 구현이 가능하며,* 별도로 만들어 놓은 **program 에 HTML 의 Get or Post 방법으로 client 의 데이터를 환경변수로 전달하고,**
 >
-> **program 의 표준 출력 결과를 client 에게 전송** 하는 것입니다.
+> **Program 의 표준 출력 결과를 client 에게 전송** 하는 것입니다.
 >
 > 즉, Java application 코딩을 하듯 **Web 브라우저용 출력 화면** 을 만드는 방법입니다.
 
@@ -96,8 +96,8 @@ Servlet 을 한줄로 정의하자면 아래와 같습니다.
 <br>
 
 
-> ***HTTP 프로토콜을 이용한 server 와 client 의 통신 과정은?***
->
+***HTTP 프로토콜을 이용한 server 와 client 의 통신 과정은?***
+
 > Client 는 정보를 얻기 위해 **server 로 HTTP 요청을 전송** 하고, server 는 이를 해석하여 *static 자원에 대한 요청* 일 경우 자원을 반환해주고,
 >
 > **그렇지 않은 경우 `CGI 프로그램`을 실행시켜 해당 결과를 return 해줍니다.**
