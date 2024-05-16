@@ -13,7 +13,7 @@ ArrayList 와 Vector 클래스 모두 배열(Array)를 기반으로 한 collecti
 
 Java 는 기본적으로 Multi Thread 환경을 고려한 프로그래밍 언어이다. 
 
-그래서 자바스크립트와 같은 왠만한 Interpreter 언어 보단 성능이 좋다. 
+그래서 자바스크립트와 같은 Interpreter 언어 보단 성능이 좋다. 
 
 그러나 각 thread 마다 어느 데이터에 **동시에 접근하여 삽입과 삭제와 같은 수정** 을 행할 경우 개발자 의도와는 다르게 오동작의 문제점이 발생하게 된다. 
 
