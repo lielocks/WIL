@@ -147,7 +147,7 @@ Servlet Container 는 **client 의 요청(Request)을 받아주고 응답(Respon
 
 2. **Servlet 생명주기(Life Cycle)** 관리
 
-   + Servlet Container 는 **Serlvet 의 탄생과 죽음을 관리** 합니다.
+   + Servlet Container 는 **Servlet 의 탄생과 죽음을 관리** 합니다.
   
    + ***Servlet Class 를 로딩하여 인스턴스화*** 하고, ***초기화 메서드를 호출*** 하고, 요청이 들어오면 ***적절한 Servlet Method*** 를 호출합니다.
   
