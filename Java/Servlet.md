@@ -82,7 +82,7 @@ Servlet 을 한줄로 정의하자면 아래와 같습니다.
 <br>
 
 
-**CGI (Common Gateway Interface) 란?**
+***CGI (Common Gateway Interface) 란?***
 
 > **`CGI`** 는 *특별한 라이브러리나 도구를 의미하는 것이 아니고,* 별도로 제작된 **`Web Server 와 program 간의 교환 방식`** 입니다.
 >
