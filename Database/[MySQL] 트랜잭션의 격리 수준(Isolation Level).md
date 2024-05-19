@@ -115,9 +115,11 @@ REPEATABLE READ 는 MVCC 를 이용해 **한 트랜잭션 내에서 동일한 �
 
 마찬가지로 사용자 B가 먼저 데이터를 조회하는데, 이번에는 `SELECT FOR UPDATE` 를 이용해 **쓰기 잠금** 을 걸었다. 
 
-여기서 `SELECT … FOR UPDATE` 구문은 **베타적 잠금(비관적 잠금, 쓰기 잠금)** 을 거는 것이다. 
 
-**읽기 잠금** 을 걸려면 `SELECT FOR SHARE` 구문을 사용해야 한다. 
+> 여기서 **`SELECT … FOR UPDATE`** 구문은 **베타적 잠금(비관적 잠금, 쓰기 잠금)** 을 거는 것이다. 
+>
+> **읽기 잠금** 을 걸려면 **`SELECT FOR SHARE`** 구문을 사용해야 한다. 
+
 
 *락은 트랜잭션이 commit 또는 rollback 될 때 해제된다.* 
 
