@@ -16,11 +16,11 @@
 
 트랜잭션은 **하나의 Connection 을 가져와 사용하다가 닫는 사이** 에서 일어난다.
 
-**트랜잭션의 시작과 종료는 Connectino 객체를 통해 이뤄지기 때문** 이다.
+**트랜잭션의 시작과 종료는 Connection 객체를 통해 이뤄지기 때문** 이다.
 
-`JDBC` 의 기본 설정은 DB 작업을 수행한 직후에 바로 커밋을 하는 `자동 커밋 옵션이 활성화` 되어 있다. 
+`JDBC` 의 기본 설정은 DB 작업을 수행한 직후에 바로 commit 을 하는 `자동 commit 옵션이 활성화` 되어 있다. 
 
-그러므로 *JDBC에서 트랜잭션을 시작* 하려면 **`자동 커밋 옵션을 false`** 로 해주어야 하는데, 그러면 새로운 트랜잭션이 시작되게 만들 수 있다.
+그러므로 *JDBC에서 트랜잭션을 시작* 하려면 **`자동 commit 옵션을 false`** 로 해주어야 하는데, 그러면 새로운 트랜잭션이 시작되게 만들 수 있다.
 
 ```java
 public void executeQuery() throws SQLException {
@@ -35,9 +35,9 @@ public void executeQuery() throws SQLException {
 <br>
 
 
-스프링을 이용하면 **내부적으로 커넥션을 갖고 있는 추상화된 `트랜잭션 매니저`** 를 이용하게 된다. 
+스프링을 이용하면 **내부적으로 connection 을 갖고 있는 추상화된 `Transaction Manager`** 를 이용하게 된다. 
 
-이 때에는 다음과 같이 트랜잭션을 시작하게 되고, 자동 커밋 옵션을 변경하는 등의 작업은 Transaction Manager 내부에서 진행된다.
+이 때에는 다음과 같이 트랜잭션을 시작하게 되고, 자동 commit 옵션을 변경하는 등의 작업은 Transaction Manager 내부에서 진행된다.
 
 
 ```java
@@ -48,6 +48,7 @@ public void executeQuery() throws SQLException {
     ...
 }
 ```
+
 
 <br>
 
@@ -75,6 +76,7 @@ public void executeQuery() throws SQLException {
     }
 }
 ```
+
 
 <br>
 
