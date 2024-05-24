@@ -8,8 +8,8 @@
 
 둘의 차이는 저장되는 **저장공간(메모리) 의 차이** 이다.
 
-**new 연산자** 를 사용하여 String 을 생성하게 되면 객체로 생성이 되어 **`Heap 메모리 영역에 저장`**이 되고,
-**리터럴 (literal)** 을 사용하여 String 을 생성할 경우 **`String constant pool 이라는 영역에 생성`** 이 된다.
+**new 연산자** 를 사용하여 String 을 생성하게 되면 객체로 생성이 되어 **`Heap`** 메모리 영역에 저장이 되고,
+**리터럴 (literal)** 을 사용하여 String 을 생성할 경우 **`String constant pool`** 이라는 영역에 생성이 된다.
 
 literal 을 사용하여 생성할 때 constant pool 에 같은 값이 존재한다면 생성되는 객체는 이미 존재하고 있는 값을 참조하게 된다.
 
@@ -48,8 +48,13 @@ System.out.println(str1 == str2); // (2) false
 System.out.println(str2 == str3); // (3) true
 ```
 
-1. 값이 동일한지를 비교하여 new연산자를 사용하여 생성한 "Hello"와 literal을 사용하여 생성한 "Hello"와 동일
+1. 값이 동일한지를 비교하여 `new 연산자를 사용하여 생성한 "Hello"` 와 `literal을 사용하여 생성한 "Hello"` 와 동일
 
-2. 메모리상 동일한 객체인지를 비교하기 때문에 Constant Pool 에 저장되어 있는 str2와 heap 메모리에 별도의 객체로 저장되어 있는 str1은 동일하지않다고 나옴.
+2. **메모리상 동일한 객체** 인지를 비교하기 때문에 String Constant Pool 에 저장되어 있는 str2 와 heap 메모리에 별도의 객체로 저장되어 있는 str1 은 동일하지 않다고 나옴.
 
-3. str2,str3 모두 literal을 사용하여 생성한 동일한 문자열이기 때문에 동일한 Constant Pool 의 주소값을 바라봄 = 동일
+3. str2, str3 모두 literal 을 사용하여 생성한 동일한 문자열이기 때문에 동일한 String Constant Pool 의 주소값을 바라봄 -> 동일
+
+> String Constant Pool 에 한번 저장된 문자열은 소스코드에서 동일한 문자열에 대해 **재사용** 하여 메모리를 절약하는 역할을 합니다.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/d283efdb-3c16-47f6-8876-02053a6a7de2)
+
