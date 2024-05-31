@@ -76,6 +76,73 @@ public class SampleEntityService {
   + Transaction 시작 시 Version 점검이 수행되고, Transaction 종료 시에도 Version 점검이 수행된다.
  
   + Version 이 다르면 Transaction 이 rollback 된다.
+ 
+  ```java
+  public interface InputRepository extends JpaRepository<Input,Long> {
+
+    @Override
+    @Lock(LockModeType.OPTIMISTIC)
+    Optional<Input> findById(Long aLong);
+  }
+  ```
+
+  + Optimistic Lock 은 Repository 메서드에도 설정 할 수가 있다.
+ 
+  + Entity 에 설정한 것과 다른 점은 **단순 Read 만 있는 경우에도 Transaction 이 끝날때 Version 을 확인한다.**
+ 
+    ![image](https://github.com/lielocks/WIL/assets/107406265/71008334-f0d0-4914-9dc7-384ac7fa3aa6)
+
+    + 마지막에 select 쿼리에서 Version 이 다를 경우 ***OptimisticLockException*** 이 발생한다.
+   
+    ![image](https://github.com/lielocks/WIL/assets/107406265/ab0b7803-79fc-49f2-9b11-b1ed1e9f2041)
+
+    > 다른 Transaction 에서 version 을 1000 으로 업데이트함
+
+    ```java
+    @RestController
+    @RequiredArgsConstructor
+    public class TestController {
+
+    private final InputRepository inputRepository;
+
+    @Transactional
+    @GetMapping("/test")
+    public void test() throws InterruptedException {
+
+        System.out.println("### Test 1 Begin ###");
+
+        Input input = inputRepository.findById(1L).orElse(null);
+        TimeUnit.SECONDS.sleep(5);
+        input.setCount(input.getCount()+1);
+        System.out.println("### Test 1 Updated : "+ input);
+        System.out.println("### Test 1 End ###");
+    }
+
+    @Transactional
+    @GetMapping("/test2")
+    public void test2() {
+        System.out.println("### Test 2 Begin ###");
+
+        Input input = inputRepository.findById(1L).orElse(null);
+        input.setCount(input.getCount()+1);
+        System.out.println("### Test 2 Update : "+input);
+        System.out.println("### Test 2 End ###");
+      }
+
+    }
+    ```
+
+    ![image](https://github.com/lielocks/WIL/assets/107406265/0fcdaa7a-0ec6-4070-afd9-d431eca501cb)
+
+  1. 첫번째 Transaction 이 select 를 해서 Entity data 를 가져온다. (version = 23)
+   
+  2. 두번째 Transaction 이 select 를 해서 동일하게 Entity 를 가져온다. (version = 23)
+       
+  3. 두번째 Transaction 이 끝나고 update 쿼리가 flush & 커밋 된다. 이때 version 을 증가시킨다. (version=24)
+   
+  4. 첫번째 Transaction 이 끝나고 update 쿼리가 flush 되는데 이때 version 이 23 이라는 데이터는 없기 때문에 예외가 발생한다. (***StaleStateException***)
+
+<br>
 
 + **OPTIMISTIC_FORCE_INCREMENT**
 
