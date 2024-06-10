@@ -46,13 +46,13 @@
     member.setId("member1");
     member.setUsername("회원1");
     ​EntityManager em = emf.createEntityManager();
-    em.getTransaction().begin();​// 객체를 저장한 상태(영속)
+    em.getTransaction().begin(); ​// 객체를 저장한 상태(영속)
     em.persist(member);
     ```
 
 <br>
 
-+ **준영속(detached)**
++ **준영속 (Detached)**
   + 영속성 컨텍스트에 **저장되었다가 분리된** 상태 // Member Entity 를 영속성 컨텍스트에서 분리, 준영속 상태
   ```java
   em.detach(member);
@@ -60,7 +60,7 @@
   
 <br>
 
-+ **삭제(removed)**
++ **삭제 (Removed)**
   + 삭제된 상태 DB 에서도 날린다. // 객체를 삭제한 상태
   ```java
   em.remove(member);
