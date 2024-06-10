@@ -231,6 +231,8 @@ JVM 이 동작하고 Class 가 load 될 때 적재돼서 **Program 이 종료될
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/70026cdb-7aad-4187-8aac-ff05c2c87d43)
 
+![image](https://github.com/lielocks/WIL/assets/107406265/9230d746-5393-4b96-9fce-326e51d8cae0)
+
 - Method 영역에 존재하는 별도의 관리영역
    
 - *각 Class / Interface 마다 별도의 Constant Pool table* 이 존재하는데, **Class 생성할때 참조해야할 정보들을 constant 로** 가지고 있는 영역이다.
