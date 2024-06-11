@@ -83,6 +83,8 @@ public class RateDiscountServiceProxy implements DiscountService {
 
 2. DI(Dependency Injection, 의존성 주입) 시에 문제가 발생할 수 있음
 
+<br>
+
 Spring 이 1개의 타입에 대해 **불필요하게 여러개의 Bean 을 관리** 해야 할 뿐만 아니라 해당 타입의 Bean 이 여러개이므로 **의존성 주입 시에도 문제가 발생할 여지** 가 있는 것이다.
 
 물론 변수 이름이나 지시자 등으로 피할 수 있지만 이는 번거롭다.
@@ -113,6 +115,8 @@ Spring 이 proxy 구현체(RateDiscountServiceProxy)를 만들때 proxy 대상�
 
 위의 예제에서 문제가 발생하지 않은 이유는 실제 Bean(RateDiscountService) 이 DiscountService 라는 인터페이스에 의존하고 있고, DiscountController 에서도 DiscountService 에 의존하고 있기 때문이다.
 
+<br>
+
 하지만 만약 다음과 같이 결제를 담당하는 PaymentService 에서 구체 클래스(RateDiscountService) 를 주입받고 있다면 어떻게 될까?
 
 ```java
@@ -124,7 +128,8 @@ public class PaymentService {
 
 }
 ```
- 
+
+
 Spring 이 새롭게 추가한 RateDiscountServiceProxy 는 DiscountService 인터페이스를 implements 한 class 이지 RateDiscountService 를 상속받은 class 가 아니다. 
 
 그래서 RateDiscountService 타입의 **Bean 을 찾을 수 없어 에러가 발생하게 된다.**
