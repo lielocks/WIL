@@ -234,6 +234,8 @@ public @interface EnableAspectJAutoProxy {
 
 위에서 proxyTargetClass 옵션의 기본값을 true 로 바꾼 것은 SpringBoot 에만 해당된다.
 
+<br>
+
 SpringBoot 는 애플리케이션을 실행할 때 AutoConfigure 를 위한 정보들을 `spring-boot-autoconfigure` 의 `spring-configuration-metadata.json` 에서 관리하고 있다.
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/719fb01a-6da3-4402-93a9-bf3e1a47bdb6)
@@ -258,7 +260,7 @@ spring.aop.proxy-target-class=false
 
 ### [정리 및 요약]
 
-원래 spring 은 proxy target 객체에 interface 가 있다면 그 interface 를 구현한 JDK Dynamic Proxy 방식으로 객체를 생성하고, interface 가 없다면 CGLib 를 이용한 Class proxy 를 만든다.
+원래 Spring 은 proxy target 객체에 interface 가 있다면 그 interface 를 구현한 JDK Dynamic Proxy 방식으로 객체를 생성하고, interface 가 없다면 CGLib 를 이용한 Class proxy 를 만든다.
 
 1. Interface 를 구현하고 있는지 확인함
 
@@ -276,6 +278,6 @@ spring.aop.proxy-target-class=false
 
 <br>
 
-그래서 Spring 은 CGLib 방식의 Proxy 를 강제하는 옵션을 제공하고 있는데, 이것이 바로 **`proxyTargetClass`** 이며, 이 값을 **true** 로 지정해주면 Spring 은 interface 가 있더라도 무시하고 Class Proxy 를 만들게 된다.
+그래서 `Spring` 은 CGLib 방식의 Proxy 를 강제하는 옵션을 제공하고 있는데, 이것이 바로 **`proxyTargetClass`** 이며, 이 값을 **true** 로 지정해주면 Spring 은 interface 가 있더라도 무시하고 Class Proxy 를 만들게 된다.
 
-SpringBoot 에서는 CGLib library 가 갖는 단점들을 모두 해결하였고, proxyTargetClass 옵션의 기본값을 true 로 사용하고 있다.
+`SpringBoot` 에서는 CGLib library 가 갖는 단점들을 모두 해결하였고, proxyTargetClass 옵션의 기본값을 true 로 사용하고 있다.
