@@ -56,6 +56,8 @@ Thread 내에서 사실 연산 + I/O 로 이루어지는데, 한 thread 에서 I
 
 libuv 는 multi thread 로 동작하는 라이브러리로 비동기 I/O 를 내보내고, callback 으로 신호를 받아오기 때문에, 빠르게 I/O가 종료되는 순으로 처리가 가능합니다.
 
+>  I/O 작업이 완료되면, 해당 thread 는 callback 함수를 event loop 에 반환합니다. Event loop 는 이 callback 을 받아서 실행합니다.
+
 (이해를 위한 그림일 뿐, 저렇게 동작하지는 않습니다.)
 
 <br>
