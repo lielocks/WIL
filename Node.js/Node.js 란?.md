@@ -236,3 +236,5 @@ OS 내부적으로 비동기 처리가 힘든 경우(DB, DNS 룩업, 파일 처�
 + Javascript 자체가 **JSON** 을 지원하기에 적합하다.
 
 + Database 로 **MongoDB / Elasticsearch** 등을 사용한다면 시너지가 더 발생한다.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/d84a8ec4-aee9-4796-bb7b-3256ca832b69)
