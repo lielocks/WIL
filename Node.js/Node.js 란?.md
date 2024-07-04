@@ -82,6 +82,8 @@ Node 와 비슷한 언어는 어떤 것이 있을까, 경쟁자라고도 할 수
 
 <br>
 
+![image](https://github.com/lielocks/WIL/assets/107406265/539b635f-e29b-4fac-8c84-e6ca1947b1ee)
+
 **1. V8 Engine 이다.**
 
 구글이 망하지 않는 한 이 engine 은 끈임없이 개선되고 발전할 것이며 지금도 충분한 성능을 보이고 있지만 추후 더 훌륭한 퍼포먼스를 보일 것으로 예상된다.
