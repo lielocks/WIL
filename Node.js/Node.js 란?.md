@@ -61,101 +61,141 @@ Node.js 에 alert 이라는 명령어를 입력하는 것은 법원에 가서 �
 
 <br>
 
-그러므로 JavaScript 라는 언어만 안다고 두 가지를 모두 제어할 수 있는 것이 아니라 각각이 어떠한 기능을 가지고 있는지 알고 있어야 제어가 가능하다.
+Node.js는 **V8 Javascript Engine** 과 **libuv 및 C/C++ 에 의존성을 가진 Javascript Runtime** 입니다. 
 
-병원이 뭘 하는 곳인지, 어떤 기능을 갖고 있는지 알아야 하는 것처럼 말이다.
+Runtime 은 Javascript 로 된 program 을 실행할 수 있는 program 입니다. 
 
-Node.js 공부의 시작은 어떠한 기능들이 있는지 알아가는 것이다.
+예를 들어 Java 코드는 Java 실행 환경인 **`JRE(Java Runtime Environment)`** 위에서 실행됩니다. 
 
-Web과 Node.js는 서로 협력적인 관계이다.
+C# 코드는 CLR(Common Language Runtime) 이라는 Runtime 에서 실행됩니다.
 
-이 두 가지를 제어해서 하나의 완결된 웹 애플리케이션을 만들 수 있다.
-
-<br>
-
-Node 와 비슷한 언어는 어떤 것이 있을까, 경쟁자라고도 할 수 있겠다.
-
-= 파이썬 루비 PHP Java ... ?
-
-그렇다면 이 경쟁자들과 비교해서 Node.js의 장점은?
-이 많은 언어 중에 Node.js 를 선택한 개발자가 얻는 장점은 무엇이란 말인가?
+> 반면 C 언어는 runtime 없이 코드를 실행합니다. C 언어처럼 compile 한 결과물이 특정 CPU 의 기계어인 언어를 Native 언어라고 합니다.
 
 <br>
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/539b635f-e29b-4fac-8c84-e6ca1947b1ee)
 
-**1. V8 Engine 이다.**
+Node.js 는 각 계층이 각 하단에 있는 API 를 사용하는 계층의 집합으로 설계되어 있습니다. 
 
-구글이 망하지 않는 한 이 engine 은 끈임없이 개선되고 발전할 것이며 지금도 충분한 성능을 보이고 있지만 추후 더 훌륭한 퍼포먼스를 보일 것으로 예상된다.
+즉 사용자 코드(Javascript) 는 
 
-<br>
+1️⃣ Node.js 의 API 를 사용하고, 
 
-**2. Event - driven 방식**
+2️⃣ Node.js API 는 C++에 바인딩 되어 있는 source 이거나 직접 만든 
 
-*사용자가 event 를 발생시켰을 때* 즉, 입력장치로 데이터를 전송했을 때'에만' 작동하는 방식이다.
+3️⃣ C++ 애드온을 호출합니다. 
 
-발생한 event 에 대해서만 웹 서버가 **'연결'** 을 해주기 때문에 자원을 최소화할 수 있다.
+4️⃣ C++ 에서는 **V8** 을 사용해 Javascript 를 해석(JIT Compiler) 및 최적화하고 어떤 코드냐에 따라 C/C++ 종속성이 있는 코드를 실행합니다. 
 
-대부분의 웹 서버는 사용자가 이벤트를 발생하기까지를 기다리면서 '자원'(대기시간 / 메모리)을 계속 소비하게 된다.
+또한 DNS, HTTP 파서, OpenSSL, zlib 이외의 C/C++ 코드들은 
 
-<br>
-
-**3. non - blocking 패러다임**
-
-non - Blocking I/O 을 이해하기 위해서 우선 Blocking I/O 방식을 이해하자.
-
-Blocking I/O 방식(동기식 I/O) 은 Read/Write 이벤트가 발생하면 이벤트가 끝날때까지 해당 모듈을 점유하게 된다. 즉 다른일을 못하게 된다.
-
-또한 memoery buffer 에 데이터를 차지하게 되므로 memory 도 소비하게 된다.
-
-요청한 I/O(DB,File,Network) 가 완료될 때까지 해당 Thread 를 '대기 모드'로 전환 시켰다가 요청한 I/O 완료 후 유저코드를 실행시킨다.
+5️⃣ **libuv 의 API** 를 사용해 해당 운영체제에 알맞는 API 를 사용합니다.
 
 <br>
 
-Blocking 방식의 비효율성을 극복하고자 만들어진 것이 Non-Blocking 방식이다.
+Node.js 의 구성요소 중 특히 V8 과 libuv 가 중요합니다. 
 
-I/O 작업을 진행하는 동안 유저 프로세스의 작업을 중단시키지 않는다.
+V8 은 Javascript 코드를 실행하도록 해 주고, libuv 는 event loop 및 OS 계층 기능을 사용하도록 API를 제공합니다. 
 
-Non-Blocking I/O(비동기식 I/O) 의 경우 **Read/Write 이벤트가 시작하자마자 모듈을 변환시켜 다른 작업을 하도록 준비상태가 된다.** 
+Node.js의 구성요소를 다음 표에 간략히 설명해두었습니다.
 
-그래서 속도가 동기식보다 빠르고 메모리도 덜 차지하게 된다.
-
-적합한 경우에는 굉장히 빠른 퍼포먼스를 보이고 적재적소에 이 방식을 사용하면 퍼포먼스가 크게 향상할 수 있다.
+![image](https://github.com/lielocks/WIL/assets/107406265/d6d58794-ef37-4866-b232-b08dbc492c06)
 
 <br>
 
-**4. Single Thread**
+### Javascript 실행을 위한 V8 Engine
 
-Nodejs 자체는 Multi thread 이다.
+V8 은 C++ 로 만든 오픈 소스 Javascript Engine 입니다. 
 
-Javascript engine 에는 외부 요청(입력) 에 대한 처리를 하는 단일 호출 스택이 존재하는데, 
+‘Engine’ 은 사용자가 작성한 코드를 실행하는 프로그램을 말합니다. 
 
-이 단일 호출 스택과 Node.js 의 다양한 thread 를 연동하기 위해 사용하는 장치가 **event loop** 이며,
+Engine 은 parser, compiler, interpreter, garbage collector, call stack, heap 으로 구성되어 있습니다. 
 
-이 **event loop 가 Single Thread** 인 것이다.
+V8 엔진은 Javascript 를 실행 할 수 있는 Engine 이며, **interpreter 역할을 하는 이그니션** 과 **compiler 역할을 하는 터보팬** 을 사용해 compile 합니다.
 
-+ **장점**
+다음은 V8 Engine 이 어떤 방식으로 Javascript source 를 compile 하는지 나타내는 그림입니다.
 
-  + 수 많은 요청에 대해 순차적으로 처리할 필요 없이 worker thread 에 작업 처리를 위임하고, 작업이 끝나는 순서대로 이벤트를 받아서 응답한다.
-  => 대규모 네트워크 프로그램을 개발하기에 적합
+![image](https://github.com/lielocks/WIL/assets/107406265/287779eb-4c55-47c5-89a0-a7dd52a0487f)
 
-  + 요청의 수와 상관 없에 main thread 는 하나이기 때문에 메모리 사용량과 시스템 리소스 사용량에 변화가 거의 없다.
- 
-  + 따라서 서버에 부하가 적다. (가볍다)
+Javascript 코드는 
 
-<br>
+1️⃣ 파서에 전달되어 → 2️⃣ 추상 구문 트리로 만들 어집니다. 
 
-+ **단점**
+이후 3️⃣ 이그니션 interpreter 에 전달되면 → 이그니션은 추상 구문 트리를
 
-  + Context Switching 비용이 크다.
- 
-  + 많은 요청을 처리하기엔 적합하지만, 큰 단일 처리가 필요한 요청에는 적합하지 않다. (Callback 지옥에 빠질 수 있음)
- 
-  + Main thread 가 무너지면 program 전체에 문제가 갈 수 있다.
+4️⃣ Bytecode 로 만듭니다. 
 
+5️⃣ 최적화가 필요한 경우이면 터보팬으로 넘깁니다. 
+
+그러면 5️⃣ 터보팬에서 compile 과정을 걸쳐서 6️⃣ Binary code 가 됩니다. 
+
+최적화가 잘 안 된 경우는 7️⃣ 다시 최적화를 해제하고 이그니션의 interpreter 기능을 사용합니다.
 
 <br>
 
+
+이처럼 interpreter 와 compiler 의 장점을 동시에 가지고 있는 프로그램을 JIT(just-in time) compiler 라고 합니다. 
+
+속도가 빠르며, 적재적소에 최적화할 수 있다는 장점과 compiler 와 interpreter 가 동시에 실행되어 메모리를 더 많이 쓴다는 단점이 있습니다.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/8b199b29-abcd-4f56-b6d0-2ccb9e145194)
+
+<br>
+
+### Event loop 와 OS 단 비동기 API 및 thread pool 을 지원하는 libuv
+
+V8 Engine 을 사용해서 Server 에서 Javascript 를 실행할 수 있다는 것을 이제 알았습니다. 
+
+그러면 Node.js 는 HTTP, 파일, socket 통신 IO 기능 등 Javascript 에는 없는 기능을 어떻게 제공하는 걸까요?
+
+<br>
+
+Node.js 는 이 문제를 **`libuv`** 라는 C++ 라이브러리를 사용해 해결합니다.
+(libuv 는 **비동기 입출력, event 기반** 에 초점을 맞춘 라이브러리입니다). 
+
+그래서 Javascript 언어에서 C++ 코드를 실행 할 수 있게 해두었습니다. 
+
+Javascript 로 C++ 코드를 감싸서 사용합니다(C++ 바인딩이라고 합 니다).
+
+![image](https://github.com/lielocks/WIL/assets/107406265/c04c6b9d-afa0-4536-884b-8abceb49a120)
+
+libuv 는 다양한 플랫폼에서 사용할 수 있는 Event loop 를 제공합니다.
+
+(Linux 는 epoll, Window 는 IOCP, MAC OS 는 kqueue, SunOS 는 이벤트 포트)
+
+또한 네트워크, 파일 IO, DNS, thread pool 기능을 추가로 제공합니다. 
+
+Node.js 에서는 **C++ binding 기능** 으로 Javascript 에서 libuv 의 API 를 사용합니다.
+
+<br>
+
+### Node.js 아키텍처
+
+지금까지 Node.js 를 구성하는 주요한 항목을 살펴보았습니다. 
+
+요약하면 Node.js는 Javascript 코드 실행에 필요한 runtime 으로 V8 Engine 을 사용하고, Javascript Runtime 에 필요한 event loop 및 OS 시스템 API 를 사용하는 데는 libuv 라이브러리를 사용합니다. 
+
+Node.js 애플리케이션의 코드가 어떻게 실행되는지를 살펴봅시다.
+
+![image](https://github.com/lielocks/WIL/assets/107406265/8a08ac49-7401-400a-b570-27ad34b08f12)
+
+1️⃣ 애플리케이션에서 요청이 발생합니다. V8 Engine 은 Javascript 코드로 된 요청을 bytecode 나 기계어로 변경합니다. 
+
+2️⃣ Javascript 로 작성된 Node.js 의 API 는 C++ 로 작성된 코드를 사용합니다. 
+
+3️⃣ V8 Engine 은 event loop 로 libuv 를 사용하고 전달된 요청을 libuv 내부의 Event Queue 추가합니다. 
+
+4️⃣ Event Queue 에 쌓인 요청은 event loop 에 전달되고, OS kernel 에 비동기 처리를 맡깁니다. 
+
+OS 내부적으로 비동기 처리가 힘든 경우(DB, DNS 룩업, 파일 처리 등)는 worker thread 에서 처리합니다. 
+
+5️⃣ OS 의 kernel 또는 worker thread 가 완료한 작업은 다시 event loop 로 전달됩니다. 
+
+6️⃣ Event loop 에서는 callback 으로 전달된 요청에 대한 완료 처리를 하고 넘깁니다. 
+
+7️⃣ 완료 처리된 응답을 Node.js 애플리케이션으로 전달합니다.
+
+<br>
 
 ## Node.js 로 만드는 server
 
