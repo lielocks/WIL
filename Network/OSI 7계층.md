@@ -76,7 +76,6 @@ PC방에서 오버워치를 하는데 연결이 끊겼다.
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/74b177b7-bbd0-4c1d-9e81-7d50290d30b5)
 
-
 <br>
 
 
@@ -95,9 +94,10 @@ PC방에서 오버워치를 하는데 연결이 끊겼다.
 
 > **-> 브릿지나 스위치를 통해 MAC 주소를 가지고 물리계층에서 받은 정보를 전달함.**
 
-![image](https://github.com/lielocks/WIL/assets/107406265/b44beaa6-6787-4109-944f-5077ad83fed3)
-
-![image](https://github.com/user-attachments/assets/7f51a46b-dd75-40a0-9448-1091e6cb7e2d)
+<div align='center'>
+    <img src="https://github.com/lielocks/WIL/assets/107406265/b44beaa6-6787-4109-944f-5077ad83fed3" width="600" height="600"/>
+    <img src="https://github.com/user-attachments/assets/7f51a46b-dd75-40a0-9448-1091e6cb7e2d" width="600" height="600"/>
+</div>
 
 <br>
 
