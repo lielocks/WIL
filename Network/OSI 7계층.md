@@ -97,6 +97,7 @@ PC방에서 오버워치를 하는데 연결이 끊겼다.
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/b44beaa6-6787-4109-944f-5077ad83fed3)
 
+![image](https://github.com/user-attachments/assets/7f51a46b-dd75-40a0-9448-1091e6cb7e2d)
 
 <br>
 
