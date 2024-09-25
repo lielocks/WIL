@@ -232,49 +232,49 @@ JPA의 Entity Class는 Public 또는 Protected의 접근제어자를 가지는 `
     protected User() {}
 
     // 빌더를 통해 User 객체를 생성
-    private User(Builder builder) {
+    private User(UserBuilder builder) {
         this.username = builder.username;
         this.email = builder.email;
         this.phoneNumber = builder.phoneNumber;
     }
 
-    // 빌더 클래스
-    public static class Builder {
+    // UserBuilder 클래스
+    public static class UserBuilder {
         private String username; // 필수 필드
         private String email;    // 필수 필드
         private String phoneNumber; // 선택 필드
 
-        // 빌더 클래스의 생성자
-        public Builder(String username, String email) {
+        // UserBuilder 클래스의 생성자
+        public UserBuilder(String username, String email) {
             this.username = username;
             this.email = email;
         }
 
         // 선택 필드를 설정하는 메서드
-        public Builder phoneNumber(String phoneNumber) {
+        public UserBuilder phoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber; // 전화번호 설정
-            return this; // 메서드 체이닝을 위해 현재 빌더 객체를 반환
+            return this; // 메서드 체이닝을 위해 현재 UserBuilder 객체를 반환
         }
 
         // User 객체를 생성하는 메서드
         public User build() {
-            return new User(this); // 생성된 빌더를 사용하여 User 객체 생성
+            return new User(this); // 생성된 UserBuilder를 사용하여 User 객체 생성
         }
+    }
+
+         // Getter 메서드들
+         public String getUsername() {
+             return username;
+         }
+
+         public String getEmail() {
+             return email;
+         }
+
+         public String getPhoneNumber() {
+             return phoneNumber;
+         }
      }
-
-        // Getter 메서드들
-        public String getUsername() {
-            return username;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public String getPhoneNumber() {
-            return phoneNumber;
-        }
-       }
    ```
 
    ```java
