@@ -188,7 +188,100 @@ JPA의 Entity Class는 Public 또는 Protected의 접근제어자를 가지는 `
 
 2. **`매개변수를 가지는 생성자`** 를 통해 **객체 생성과 동시에 필드값 초기화**
 
+   ```java
+   public class User {
+    private String username;
+    private String email;
+
+    // 기본 생성자를 protected로 제한 (JPA 용)
+    protected User() {}
+
+    // 정적 팩토리 메서드
+    public static User createUser(String username, String email) {
+        return new User(username, email);
+    }
+
+    // 생성자는 private으로 하여 직접 호출 불가능하게 함
+    private User(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
+
+    // getter 메서드만 제공
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+   }
+   ```
+   
+<br>
+
 3. **`정적 팩토리 메서드 (static factory method)`** 또는 **`빌더 (builder) 패턴`** 을 통해 **객체 생성과 동시에 필드값 초기화**
+
+   ```java
+   public class User {
+    private String username;
+    private String email;
+    private String phoneNumber;
+
+    // 기본 생성자는 protected로 제한
+    protected User() {}
+
+    // 빌더를 통해 User 객체를 생성
+    private User(Builder builder) {
+        this.username = builder.username;
+        this.email = builder.email;
+        this.phoneNumber = builder.phoneNumber;
+    }
+
+    // 빌더 클래스
+    public static class Builder {
+        private String username; // 필수 필드
+        private String email;    // 필수 필드
+        private String phoneNumber; // 선택 필드
+
+        // 빌더 클래스의 생성자
+        public Builder(String username, String email) {
+            this.username = username;
+            this.email = email;
+        }
+
+        // 선택 필드를 설정하는 메서드
+        public Builder phoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber; // 전화번호 설정
+            return this; // 메서드 체이닝을 위해 현재 빌더 객체를 반환
+        }
+
+        // User 객체를 생성하는 메서드
+        public User build() {
+            return new User(this); // 생성된 빌더를 사용하여 User 객체 생성
+        }
+     }
+
+        // Getter 메서드들
+        public String getUsername() {
+            return username;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+       }
+   ```
+
+   ```java
+   User user = new User.UserBuilder("john_doe", "john@example.com")
+                   .phoneNumber("010-1234-5678") // 메서드 체이닝
+                   .build(); // User 객체 생성
+   ```
 
 <br>
 
