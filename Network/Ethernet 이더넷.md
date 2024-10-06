@@ -6,6 +6,52 @@ Ethernet 은 전세계 학교, 가정, 사무실에서 가장 많이 활용되�
 
 Ethernet 은 OSI 모델 7계층 중 Physical Layer(신호와 배선)과 DataLink Layer(MAC packet, protocol 형식)에서 그 구성 형식이 정의된다.
 
+> **1. Ethernet이 Physical Layer(물리 계층)에서 하는 역할**
+> 
+> Physical 계층은 네트워크에서 bit 를 신호로 변환하여 네트워크 케이블이나 무선 신호로 데이터를 전송하는 역할을 합니다.  
+> Ethernet 은 이 물리 계층에서 데이터 전송 방식에 대한 규격을 제공합니다.  
+>
+> *왜 Ethernet이 필요하냐?*  
+> 
+> Ethernet 은 어떻게 bit 를 전기 신호나 광 신호로 변환할지 정의한 표준입니다.  
+> Ethernet 의 Physical 계층 표준에는 케이블 종류, 연결 방식, 속도 등이 포함되어 있습니다.  
+> 예를 들어, Ethernet 이 구리선이나 광섬유 케이블을 통해 데이터를 어떻게 신호로 변환하고, 그 신호를 어떻게 해석할지 정의합니다.  
+> 즉, 물리적인 hardware 환경에서 Ethernet 을 사용할 수 있는 규격을 제공하는 것이죠.  
+>
+> 예를 들어, 이 구리선이나 광섬유 케이블을 통해 데이터를 어떻게 신호로 변환하고, 그 신호를 어떻게 해석할지 정의합니다.  
+> 즉, hardware 하드웨어 환경에서 Ethernet을 사용할 수 있는 규격을 제공하는 것이죠.  
+>
+> *하지만 꼭 Ethernet 이어야 하는가?*
+> 
+> 아니요. 물리 계층에서는 다른 기술도 사용할 수 있습니다.  
+> 예를 들어, `광섬유 기반의 다른 전송 기술` 이나 `Wi-Fi 같은 무선 기술` 도 있습니다.  
+> Ethernet 은 물리 계층의 하나의 표준일 뿐이며, 많은 네트워크에서 사용되는 기술입니다.  
+
+> **2. Ethernet 이 Data Link Layer(데이터 링크 계층)에서 하는 역할**  
+> Data Link 계층은 frame 단위로 데이터를 주고받으며, 장치 간의 data 전달을 관리합니다.  
+> 이 계층은 특히 MAC 주소를 사용하여 네트워크 장치들이 서로 데이터를 주고받을 수 있도록 합니다.  
+>
+> *왜 Ethernet 이 필요하냐?*  
+>
+> Ethernet 은 frame 구조, MAC 주소 기반 통신, 오류 검출, 충돌 방지 등의 기능을 제공하는 표준입니다.  
+> Data Link 계층에서 Ethernet 을 사용하면, 장치들이 **`각자의 MAC 주소`** 를 통해 데이터를 주고받고, 네트워크에서 충돌 없이 안정적으로 통신할 수 있습니다.  
+>
+> *하지만 꼭 Ethernet 이어야 하는가?*
+> 
+> 아니요. Data Link 계층에서도 다른 프로토콜을 사용할 수 있습니다.  
+> 예를 들어, **PPP(Point-to-Point Protocol)** 나 Frame Relay 같은 다른 Data Link 계층 프로토콜이 있습니다.  
+> Ethernet 은 Data Link 계층에서 가장 널리 쓰이는 표준이지만, 특정 환경에서는 다른 프로토콜을 사용할 수 있습니다.  
+
+> **결론**
+> 
+> Ethernet 은 필수가 아니라, 하나의 네트워크의 구조와 기능을 정의하는 **표준 프로토콜** 입니다.  
+> Network 에서 Physical 계층과 Data Link 계층이 어떤 방식으로 동작하는지 정의하는 역할을 합니다.  
+> 많은 네트워크에서 Ethernet 을 사용하는 이유는 그것이 표준화되어 있고, 대규모 네트워크에서도 효율적이기 때문입니다.  
+>
+> 하지만 모든 네트워크에서 반드시 Ethernet을 써야 하는 것은 아니며, 다른 Physical 및 Data Link 계층의 기술을 사용할 수도 있습니다.  
+> 예를 들어, Wi-Fi는 무선 네트워크의 Data Link 계층에서 사용되고, Physical 계층에서는 전파 신호로 데이터를 전송하죠.  
+>
+> 정리하자면, Ethernet 은 Physical 계층과 Data Link 계층에서 동작하는 중요한 표준 기술이지만, 대체 가능한 기술들이 존재한다는 점을 기억하면 좋습니다.  
 
 <br>
 
@@ -22,13 +68,13 @@ Ethernet 은 OSI 모델 7계층 중 Physical Layer(신호와 배선)과 DataLink
 <br>
 
 
-Ethernet 통신 방식 중에 중요한 **`CSMA / CD (Carrier Sense Multiple Access / Collision Detection)`** 방식이 있따.
+Ethernet 통신 방식 중에 중요한 **`CSMA / CD (Carrier Sense Multiple Access / Collision Detection)`** 방식이 있다.
 
 이 방식들은 여러대의 시스템이 동시에 통신을 하게 되면 문제가 발생할 수 있는데, 이 부분을 어떠한 방식으로 처리하는지에 대한 기술을 말한다.
 
 보통 우리가 일반적으로 느끼기에 ***동시에 통신을 해도 충돌은 발생하지 않는데?*** 라고 생각할 수 있지만,
 
-**`하나의 Ethernet(LAN) 회선`** 에서는 우리가 체감할 수 없는 아주 짧은 시간에 데이터 송 / 수신을 제어 및 처리하여 통신을 하게 된다.
+**`하나의 Ethernet(LAN) 회선`** 에서는 우리가 체감할 수 없는 아주 짧은 시간에 데이터 송/수신 을 제어 및 처리하여 통신을 하게 된다.
 
 
 <br>
@@ -74,7 +120,7 @@ Ethernet 통신 방식 중에 중요한 **`CSMA / CD (Carrier Sense Multiple Acc
 <br>
 
 
-가장 중요한 것은 *랜선과 통신 장비에서 지원하는 포트가 다른 경우* **속도의 차이** 이다.
+가장 중요한 것은 *랜선과 통신 장비에서 지원하는 port 가 다른 경우* **속도의 차이** 이다.
 
 예를 들어 `1000BASE-T(1 Gbps) LAN 포트`에 `10BASE-T 를 지원하는 케이블`을 연결 한 경우, 속도는 **10BASE-T(10 Mbps) 만 통신이 가능하다.**
 
