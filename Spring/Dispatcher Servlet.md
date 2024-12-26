@@ -4,20 +4,19 @@
 
 <br>
 
-디스패처 서블릿의 dispatch 는 "보내다" 라는 뜻을 가지고 있습니다.
+Dispatcher Servlet 의 dispatch 는 "보내다" 라는 뜻을 가지고 있습니다.
 
-그리고 이러한 단어를 포함하는 디스패처 서블릿은 **HTTP 프로토콜로 들어오는 모든 요청을 가장 먼저 받아 
-적합한 controller 에 위임해주는 프론트 컨트롤러(Front Controller)** 라고 정의할 수 있습니다.
+그리고 이러한 단어를 포함하는 Dispatcher Servlet 은 HTTP 프로토콜로 들어오는 모든 요청을 가장 먼저 받아 적합한 controller 에 위임해주는 **프론트 컨트롤러(Front Controller)** 라고 정의할 수 있습니다.
 
-이것을 보다 자세히 설명하자면, `클라이언트로부터 어떠한 요청` 이 오면 *Tomcat(톰캣) 과 같은 서블릿 컨테이너가 요청을 받게 됩니다.*
+이것을 보다 자세히 설명하자면, `client 로부터 어떠한 요청` 이 오면 **Tomcat 과 같은 Servlet Container** 가 요청을 받게 됩니다.
 
-그리고 이 모든 요청을 **프론트 컨트롤러인 디스패처 서블릿이 가장 먼저** 받게 됩니다.
+그리고 이 모든 요청을 **Front Controller 인 Dispatcher Servlet 이 가장 먼저** 받게 됩니다.
 
-그러면 디스패처 서블릿은 **`공통적인 작업을 먼저 처리`** 한 후에 **해당 요청을 처리해야 하는 컨트롤러를 찾아서 작업을 위임** 합니다.
+그러면 Dispatcher Servlet 은 **`공통적인 작업을 먼저 처리`** 한 후에 **해당 요청을 처리해야 하는 controller 를 찾아서 작업을 위임** 합니다.
 
-여기서 Front Controller (프론트 컨트롤러) 라는 용어가 사용되는데, 
+여기서 Front Controller 라는 용어가 사용되는데, 
 
-Front Controller 는 주로 서블릿 컨테이너의 제일 앞에서 서버로 들어오는 클라이언트의 모든 요청을 받아서 처리해주는 컨트롤러로써,
+Front Controller 는 주로 Servlet Controller 의 제일 앞에서 서버로 들어오는 클라이언트의 모든 요청을 받아서 처리해주는 컨트롤러로써,
 
 MVC 구조에서 함께 사용되는 디자인 패턴입니다.
 
@@ -25,14 +24,13 @@ MVC 구조에서 함께 사용되는 디자인 패턴입니다.
 
 ### [Dispatcher-Servlet 디스패처 서블릿 의 장점]
 
-Spring MVC 는 Dispatcher Servlet 이 등장함에 따라 web.xml 의 역할을 상당히 축소시켜주었습니다.
+Spring MVC 는 Dispatcher Servlet 이 등장함에 따라 `web.xml` 의 역할을 상당히 축소시켜주었습니다.
 
-과거에는 모든 서블릿을 URL 매핑을 위해 web.xml 에 모두 등록해주어야 했지만,
+과거에는 **모든 Servlet 의 URL 매핑** 을 위해 `web.xml` 에 모두 등록해주어야 했지만,
 
-**Dispatcher-Servlet 이 해당 어플리케이션으로 들어오는 모든 요청을 핸들링** 해주고 **`공통 작업을 처리`** 해주면서 
-상당히 편리하게 이용할 수 있게 되었습니다.
+**Dispatcher-Servlet** 이 **해당 application 으로 들어오는 모든 request 를 handling** 해주고 **`공통 작업을 처리`** 해주면서 상당히 편리하게 이용할 수 있게 되었습니다.
 
-우리는 controller 를 구현해두기만 하면 Dispatcher Servlet 이 알아서 적합한 컨트롤러로 위임을 해주는 구조가 되었습니다.
+우리는 controller 를 구현해두기만 하면 Dispatcher Servlet 이 알아서 적합한 controller 로 위임을 해주는 구조가 되었습니다.
 
 <br>
 
@@ -40,24 +38,25 @@ Spring MVC 는 Dispatcher Servlet 이 등장함에 따라 web.xml 의 역할을 
 
 Dispatcher Servlet 이 요청을 Controller 로 넘겨주는 방식은 효율적으로 보입니다.
 
-하지만 Dispatcher Servlet 이 모든 요청을 처리하다 보니 이미지나 HTML/CSS/JavaScript 등과 같은 정적 파일에 대한 요청마저 모두 가로채는 까닭에 
-정적자원(Static Resources) 를 불러오지 못하는 상황도 발생하곤 했습니다.
-
-이러한 문제를 해결하기 위해 개발자들이 고안한 2가지 방법 !
-
-1. 정적 자원 요청과 어플리케이션 요청을 분리
-
-2. 어플리케이션 요청을 탐색하고 없으면 정적 자원 요청으로 처리
+하지만 Dispatcher Servlet 이 모든 요청을 처리하다 보니 `이미지 나 HTML/CSS/JavaScript 등과 같은 정적 파일` 에 대한 요청마저 모두 가로채는 까닭에 정적자원(Static Resources) 를 불러오지 못하는 상황도 발생하곤 했습니다.
 
 <br>
 
-### 1. 정적 자원 요청과 어플리케이션 요청을 분리
+이러한 문제를 해결하기 위해 개발자들이 고안한 2가지 방법 !
 
-이에 대한 해결책은 두가지가 있는데 첫번째 클라이언트의 요청을 2가지로 분리하여 구분하는 것입니다.
+1. Static Resource 요청과 Application 요청을 분리
 
-+ /apps 의 URL 로 접근하면 Dispatcher Servlet 이 담당한다.
+2. Application 요청을 탐색하고 없으면 Static Resource 요청으로 처리
 
-+ /resources 의 URL 로 접근하면 Dispatcher Servlet이 컨트롤할 수 없으므로 담당하지 않는다.
+<br>
+
+### 1. Static Resource 요청과 Application 요청을 분리
+
+이에 대한 해결책은 두가지가 있는데 첫번째 client 의 요청을 2가지로 분리하여 구분하는 것입니다.
+
++ `/apps 의 URL` 로 접근하면 Dispatcher Servlet 이 **담당한다.**
+
++ `/resources 의 URL` 로 접근하면 Dispatcher Servlet이 컨트롤할 수 없으므로 **담당하지 않는다.**
 
 <br>
 
@@ -67,11 +66,11 @@ Dispatcher Servlet 이 요청을 Controller 로 넘겨주는 방식은 효율적
 
 <br>
 
-### 2. 어플리케이션 요청을 탐색하고 없으면 정적 자원 요청으로 처리
+### 2. Application 요청을 탐색하고 없으면 Static Resource 요청으로 처리
 
-두번째 방법은 Dispatcher Servlet 이 요청을 처리할 컨트롤러를 먼저 찾고,
+두번째 방법은 Dispatcher Servlet 이 요청을 처리할 controller 를 먼저 찾고,
 
-**`요청에 대한 컨트롤러를 찾을 수 없는 경우에,`** **2차적으로 설정된 자원 (Resource) 경로를 탐색하여 자원을 탐색** 하는 것입니다.
+**`요청에 대한 controller 를 찾을 수 없는 경우에,`** **2차적으로 설정된 자원 (Resource) 경로를 탐색하여 자원을 탐색** 하는 것입니다.
 
 이렇게 영역을 분리하면 효율적인 리소스 관리를 지원할 뿐 아니라 추후에 확장을 용이하게 해준다는 장점이 있습니다.
 
@@ -79,13 +78,13 @@ Dispatcher Servlet 이 요청을 Controller 로 넘겨주는 방식은 효율적
 
 ## 2. Dispatcher-Servlet 의 동작 과정
 
-앞서 설명한대로 디스패처 서블릿은 적합한 컨트롤러와 메소드를 찾아 요청을 위임해야 합니다. 
+앞서 설명한대로 Dispatcher Servlet 은 적합한 controller 와 method 를 찾아 요청을 위임해야 합니다. 
 
-Dispatcher Servlet의 처리 과정을 살펴보면 다음과 같습니다.
+Dispatcher Servlet 의 처리 과정을 살펴보면 다음과 같습니다.
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/240d45f4-5f7f-4a40-b235-947e80b5f90a)
 
-1. 클라이언트의 요청을 Dispatcher Servlet 이 받음
+1. Client 의 요청을 Dispatcher Servlet 이 받음
 
 2. 요청 정보를 통해 요청을 위임할 Controller 를 찾음
 
@@ -97,21 +96,21 @@ Dispatcher Servlet의 처리 과정을 살펴보면 다음과 같습니다.
 
 6. Controller 가 반환값을 반환함
 
-7. Handler Adapther 가 반환값을 처리함
+7. Handler Adapter 가 반환값을 처리함
 
-8. 서버의 응답을 클라이언트로 반환함
+8. 서버의 응답을 Client 로 반환함
 
 <br>
 
-### 1. 클라이언트의 요청을 Dispatcher Servlet 이 받음
+### 1. Client 의 요청을 Dispatcher Servlet 이 받음
 
-앞서 설명하였듯 디스패처 서블릿은 가장 먼저 요청을 받는 **`Front Controller`** 입니다.
+앞서 설명하였듯 Dispatcher Servlet 은 가장 먼저 요청을 받는 **`Front Controller`** 입니다.
 
-Servlet Context(Web Context) 에서 필터들을 지나 Spring Context 에서 Dispatcher Servlet 이 가장 먼저 요청을 받게 됩니다.
+Servlet Context(Web Context) 에서 filter 들을 지나 Spring Context 에서 Dispatcher Servlet 이 가장 먼저 요청을 받게 됩니다.
 
 이를 그림으로 표현하면 다음과 같습니다.
 
-실제로는 `Interceptor 가 Controller 로 요청을 위임하지는 않으므로,` 아래의 그림은 처리 순서를 도식화한 것으로만 이해하면 됩니다.
+실제로는 *Interceptor 가 Controller 로 요청을 위임하지는 않으므로,* 아래의 그림은 처리 순서를 도식화한 것으로만 이해하면 됩니다.
 
 ![image](https://github.com/lielocks/WIL/assets/107406265/6dbe38fd-07e4-425d-8d04-d96d065370b3)
 
@@ -120,45 +119,52 @@ Servlet Context(Web Context) 에서 필터들을 지나 Spring Context 에서 Di
 ### 2. 요청 정보를 통해 요청을 위임할 Controller 를 찾음
 
 Dispatcher Servlet 은 **요청을 처리할 Handler(Controller)** 를 찾고 **해당 객체의 메서드를 호출** 합니다.
+
 따라서 가장 먼저 *어느 controller 가 요청을 처리할 수 있는지를 식별* 해야 하는데, 해당 역할을 하는 것이 바로 **`HandlerMapping`** 입니다.
 
-최근에는 @Controller 에 @ReqeustMapping 관련 어노테이션을 사용해 controller 를 작성하는 것이 일반적입니다.
+최근에는 *@Controller 에 @ReqeustMapping 관련 어노테이션을 사용해 Controller 를 작성하는 것* 이 일반적입니다.
 
 하지만 예전 스펙을 따라 Controller 인터페이스를 구현하여 controller 를 작성할 수도 있습니다.
-즉, controller 를 구현하는 방법이 다양하기 때문에 spring 은 **HandlerMapping 인터페이스** 를 만들어두고, 다양한 구현 방법에 따라 요청을 처리할 대상을 찾도록 되어 있습니다.
+
+즉, Controller 를 구현하는 방법이 다양하기 때문에 Spring 은 **HandlerMapping 인터페이스** 를 만들어두고, 다양한 구현 방법에 따라 요청을 처리할 대상을 찾도록 되어 있습니다.
 
 오늘날 흔한 @Controller 방식은 **`RequestMappingHandlerMapping`** 가 처리합니다.
-이는 @Controller 로 작성된 **모든 컨트롤러를 찾고 파싱하여 HashMap 으로 <요청 정보, 처리할 대상> 관리** 합니다.
 
-여기서 `처리할 대상은 HandlerMethod 객체` 로 controller, method 등을 갖고 있는데, 이는 **spring 이 reflection 을 이용해 요청을 위임** 하기 때문입니다.
+이는 @Controller 로 작성된 모든 Controller 를 찾고 parsing 하여 HashMap 으로 **<요청 정보, 처리할 대상> 관리** 합니다.
 
-그래서 요청이 오면 `(Http Method, URI) 등을 사용해 요청 정보를 만들고,`
+여기서 `처리할 대상은 HandlerMethod 객체` 로 controller, method 등을 갖고 있는데, 이는 **Spring 이 reflection 을 이용해 요청을 위임** 하기 때문입니다.
+
+그래서 요청이 오면 `(Http Method, URI) 등을 사용해 요청 정보를 만들고,
+
 **HashMap 에서 요청을 처리할 대상(Handler Method) 를 찾은 후** 에 **`HandlerExecutionChain 으로 감싸서 반환`** 합니다.
 
-HandlerExecutionChain 으로 감싸는 이유는 **controller 로 요청을 넘겨주기 전에 처리해야 하는 interceptor 등을 포함하기 위해서** 입니다.
+HandlerExecutionChain 으로 감싸는 이유는 **Controller 로 요청을 넘겨주기 전에 처리해야 하는 interceptor 등을 포함하기 위해서** 입니다.
 
 <br>
 
 ### 3. 요청을 Controller 로 위임할 Handler Adapter 를 찾아서 전달함
 
-이후에 controller 로 요청을 위임해야 하는데, Dispatcher Servlet 은 *controller 로 요청을 직접 위임하는 것이 아니라* **`HandlerAdapter 를 통해 위임`** 합니다.
-그 이유는 앞서 설명하였듯 controller 의 구현 방식이 **다양** 하기 때문입니다.
+이후에 Controller 로 요청을 위임해야 하는데, Dispatcher Servlet 은 *Controller 로 요청을 직접 위임하는 것이 아니라* **`HandlerAdapter 를 통해 위임`** 합니다.
 
-spring 은 꽤나 오래 전에 (2004년) 만들어진 프레임워크로, 트렌드를 굉장히 잘 따라갑니다.
+그 이유는 앞서 설명하였듯 Controller 의 구현 방식이 **다양** 하기 때문입니다.
+
+Spring 은 꽤나 오래 전에 (2004년) 만들어진 프레임워크로, 트렌드를 굉장히 잘 따라갑니다.
+
 프로그래밍 흐름에 맞게 spring 역시 변화를 따라가게 되었는데, 그러면서 다양한 코드 작성 방식을 지원하게 되었습니다.
 
-과거에는 컨트롤러를 Controller 인터페이스로 구현하였는데, 
-Ruby On Rails가 어노테이션 기반으로 관례를 이용한 프로그래밍을 내세워 혁신을 일으키면서 spring 역시 이를 도입하게 되었습니다.
+과거에는 컨트롤러를 Controller Interface 로 구현하였는데, Ruby On Rails가 어노테이션 기반으로 관례를 이용한 프로그래밍을 내세워 혁신을 일으키면서 Spring 역시 이를 도입하게 되었습니다.
 
-그래서 다양하게 작성되는 controller 에 대응하기 위해 spring 은 **Handler Adapter 라는 어댑터 인터페이스를 통해 adapter pattern 을 적용함으로써 controller 의 구현 방식에 상관없이 요청을 위임** 할 수 있도록 하였습니다.
+그래서 다양하게 작성되는 controller 에 대응하기 위해 
+
+Spring 은 **Handler Adapter 라는 Adapter Interface 를 통해 Adapter Pattern 을 적용함으로써 Controller 의 구현 방식에 상관없이 요청을 위임** 할 수 있도록 하였습니다.
 
 <br>
 
 ### 4. Handler Adapther 가 Controller 로 요청을 위임함
 
-`Handler Adapter 가 controller 로 요청을 위임한 전 / 후` 에 **공통적인 전 / 후처리 과정이 필요** 합니다.
+`Handler Adapter 가 Controller 로 요청을 위임한 전 / 후` 에 **공통적인 전 / 후처리 과정이 필요** 합니다.
 
-대표적으로 *interceptor 들을 포함해 요청 시에 @RequestParam, @RequestBody 등을 처리* 하기 위한 **`ArgumentResolver`** 들과 
+대표적으로 *Interceptor 들을 포함해 요청 시에 @RequestParam, @RequestBody 등을 처리* 하기 위한 **`ArgumentResolver`** 들과 
 
 *응답 시에 ResponseEntity 의 Body 를 Json 으로 직렬화하는 등의 처리* 를 하는 **`ReturnValueHandler`** 등이 **handler adapter 에서 처리** 됩니다.
 
@@ -166,15 +172,15 @@ ArgumentResolver 등을 통해 파라미터가 준비되면 reflection 을 이�
 
 <br>
 
-### 5. business logic 을 처리함
+### 5. Business Logic 을 처리함
 
-이후에 controller 는 service 를 호출하고 우리가 작성한 business logic 들이 진행됩니다.
+이후에 Controller 는 service 를 호출하고 우리가 작성한 Business Logic 들이 진행됩니다.
 
 <br>
 
-### 6. controller 가 반환값을 반환함
+### 6. Controller 가 반환값을 반환함
 
-business logic 이 처리된 후에는 controller 가 반환값을 반환합니다. 
+business logic 이 처리된 후에는 Controller 가 반환값을 반환합니다. 
 
 응답 데이터를 사용하는 경우에는 주로 **`ResponseEntity`** 를 반환하게 되고, 응답 페이지를 보여주는 경우라면 String으로 View의 이름을 반환할 수도 있습니다. 
 
@@ -182,31 +188,31 @@ business logic 이 처리된 후에는 controller 가 반환값을 반환합니�
 
 <br>
 
-### 7. Handler Adapther 가 반환값을 처리함
+### 7. Handler Adapter 가 반환값을 처리함
 
-HandlerAdapter는 controller 로부터 받은 응답을 `응답 처리기인 ReturnValueHandler` 가 후처리한 후에 Dispatcher Servlet 으로 돌려줍니다. 
+HandlerAdapter 는 Controller 로부터 받은 응답을 `응답 처리기인 ReturnValueHandler` 가 후처리한 후에 Dispatcher Servlet 으로 돌려줍니다. 
 
-만약 컨트롤러가 ResponseEntity를 반환하면 **`HttpEntityMethodProcessor`** 가 **MessageConverter를 사용해 응답 객체를 직렬화하고 응답 상태(HttpStatus)를 설정** 합니다. 
+만약 Controller 가 ResponseEntity를 반환하면 **`HttpEntityMethodProcessor`** 가 **MessageConverter를 사용해 응답 객체를 직렬화하고 응답 상태(HttpStatus)를 설정** 합니다. 
 
-만약 컨트롤러가 View 이름을 반환하면 ViewResolver를 통해 View를 반환합니다.
+만약 Controller 가 View 이름을 반환하면 ViewResolver 를 통해 View 를 반환합니다.
+
+<br>
+
+### 8. Server 의 응답을 Client 로 반환함
+
+Dispatcher Servlet 을 통해 반환되는 응답은 다시 filter 들을 거쳐 Client 에게 반환됩니다. 
+
+이때 응답이 데이터라면 그대로 반환되지만, 응답이 화면이라면 View 의 이름에 맞는 View 를 찾아서 반환해주는 **`ViewResolver`** 가 적절한 화면을 내려줍니다.
 
 <br>
 
-### 8. 서버의 응답을 클라이언트로 반환함
-
-Dispatcher Servlet 을 통해 반환되는 응답은 다시 필터들을 거쳐 클라이언트에게 반환됩니다. 
-
-이때 응답이 데이터라면 그대로 반환되지만, 응답이 화면이라면 View의 이름에 맞는 View를 찾아서 반환해주는 **`ViewResolver`** 가 적절한 화면을 내려줍니다.
- 
-<br>
-
-<br>
+---
 
 # SpringBoot 소스 코드와 DispatcherServlet  동작 과정 살펴보기
 
 ## 1. DispatcherServlet 디스패처 서블릿 동작 과정
 
-Dispatcher Servlet 은 **모든 요청을 가장 먼저 받는 Front Controller** 이다.
+Dispatcher Servlet 은 모든 요청을 가장 먼저 받는 **Front Controller** 이다.
 
 Dispatcher Servlet 을 이해하기 위해 가장 먼저 계층 구조부터 살펴보자.
 
@@ -218,9 +224,9 @@ Dispatcher Servlet 을 이해하기 위해 가장 먼저 계층 구조부터 살
 
 + **HttpServlet**
 
-  + Http 서블릿을 구현하기 위한 J2EE 스펙의 추상 클래스
+  + Http servlet 을 구현하기 위한 J2EE 스펙의 추상 클래스
  
-  + 특정 HTTP 메서드를 지원하기 위해서는 doX 메서드를 오버라이딩 해야 함 (template method pattern)
+  + 특정 HTTP 메서드를 지원하기 위해서는 `doX method` 를 overriding 해야 함 (template method pattern)
  
   + doPatch 는 지원하지 않음 (아래에서 살펴볼 예정)
  
@@ -230,17 +236,17 @@ Dispatcher Servlet 을 이해하기 위해 가장 먼저 계층 구조부터 살
 
   + HttpServlet 을 Spring 이 구현한 추상 클래스
  
-  + Spring 이 모든 유형의 servlet 구현을 위해 정의한 공통 클래스
+  + Spring 이 모든 유형의 Servlet 구현을 위해 정의한 공통 클래스
  
 <br>
 
 + **FrameworkServlet**
 
-  + Spring web Framework 의 기반이 되는 servlet
+  + Spring web Framework 의 기반이 되는 Servlet
  
-  + doX 메서드를 오버라이딩하고 있으며, doX 요청들을 공통된 요청 처리 메서드인 processRequest 로 전달함
+  + `doX` 메서드를 overriding 하고 있으며, `doX` 요청들을 공통된 요청 처리 메서드인 ProcessRequest 로 전달함
  
-  + processRequest 에서 실제 요청 핸들링은 추상 메서드 doService 로 위임됨 (template method pattern)
+  + ProcessRequest 에서 실제 요청 handling 은 추상 메서드 `doService` 로 위임됨 (template method pattern)
  
 <br>
 
@@ -248,11 +254,11 @@ Dispatcher Servlet 을 이해하기 위해 가장 먼저 계층 구조부터 살
 
   + Controller 로 요청을 전달하는 중앙 집중형 Front controller(Servlet 구현체)
  
-  + 실제 요청을 처리하는 doService 를 구현하고 있음
+  + 실제 요청을 처리하는 `doService` 를 구현하고 있음
 
 <br>
 
-Dispatcher Servlet 이 요청을 받아서 controller 로 위임하는 과정을 자세히 살펴보자.
+Dispatcher Servlet 이 요청을 받아서 Controller 로 위임하는 과정을 자세히 살펴보자.
 
 1. `Servlet 요청 / 응답` 을 `HTTP Servlet 요청 / 응답` 으로 변환
 
@@ -306,9 +312,9 @@ public abstract class HttpServlet extends GenericServlet {
 }
 ```
 
-service 에서는 먼저 **Servlet 관련 Request / Response 객체를 HTTP 관련 Request / Resposne 로 (캐스팅)** 해준다.
+Service 에서는 먼저 **Servlet 관련 Request / Response 객체를 HTTP 관련 Request / Resposne 로 (casting)** 해준다.
 
-캐스팅 시에 에러가 발생하면 HTTP 요청이 아니므로 에러를 던진다.
+Casting 시에 에러가 발생하면 HTTP 요청이 아니므로 에러를 던진다.
 
 <br>
 
@@ -316,7 +322,10 @@ service 에서는 먼저 **Servlet 관련 Request / Response 객체를 HTTP 관�
 
 그리고 `HttpServletRequest 객체를 parameter 로 갖는 service 메서드` 를 호출하는데, HttpServlet 에도 service 가 있지만 
 
-**자식 클래스인 FrameworkServlet 에 service 가 오버라이딩 되어 있어 자식의 메서드가 호출** 된다.
+**자식 클래스인 FrameworkServlet 에 service 가 overriding 되어 있어 자식의 메서드가 호출** 된다.
+
+<br>
+
 
 해당 로직을 보면 다음과 같다.
 
